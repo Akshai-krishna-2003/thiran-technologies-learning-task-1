@@ -48,8 +48,15 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Latest News', style: 
-      TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold, color: Colors.blue, ),)),
+      appBar: AppBar(
+          title: const Text(
+        'Latest News',
+        style: TextStyle(
+          fontSize: 30.0,
+          fontWeight: FontWeight.bold,
+          color: Colors.blue,
+        ),
+      )),
       body: ListView.builder(
         itemCount: _articles.length,
         itemBuilder: (context, index) {
