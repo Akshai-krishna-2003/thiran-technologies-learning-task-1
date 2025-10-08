@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:practiceapp/model/news.dart';
-import 'package:practiceapp/services/news_service.dart';
-import 'package:practiceapp/services/db_service.dart';
+import 'package:practiceapp/src/feature/domain/model/news.dart';
+import 'package:practiceapp/src/feature/data/services/news_service.dart';
+import 'package:practiceapp/src/feature/data/services/db_service.dart';
 
 // Service providers both news and sqlite3 here
 final newsServiceProvider = Provider<NewsService>((ref) => NewsService());
@@ -13,13 +13,16 @@ final articlesProvider = FutureProvider<List<News>>((ref) async {
   final dbService = ref.watch(dbServiceProvider);
 
   // 1. Fetch from API
-  final fetchedArticles = await newsService.fetchArticles(); 
+  final fetchedArticles = await newsService.fetchArticles();
 
   // 2. Save to local DB
   await dbService.insertArticles(fetchedArticles);
 
   // 3. Get all from DB
-  final allArticles = await dbService.getAllArticles(); 
+  final allArticles = await dbService.getAllArticles();
+
+  final paginatedArticles = await dbService.getArticlesPage();
 
   return allArticles;
 });
+

@@ -1,6 +1,6 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
-import 'package:practiceapp/model/news.dart';
+import 'package:practiceapp/src/feature/domain/model/news.dart';
 import 'dart:convert';
 
 class NewsService {

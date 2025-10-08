@@ -1,5 +1,5 @@
 import 'package:path/path.dart';
-import 'package:practiceapp/model/news.dart';
+import 'package:practiceapp/src/feature/domain/model/news.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DbService {
@@ -44,8 +44,17 @@ class DbService {
     return result.map((row) => News.fromJson(row)).toList();
   }
 
-  // Future<List<News>> getPaginatedArticles(int limit, int offset) async {
-  //   final db = await openMyDatabase();
+  // Paginated 
+  Future<List<News>> getArticlesPage({int offset = 0, int limit = 10}) async {
+  final db = await openMyDatabase();
+  final result = await db.query(
+    'news',
+    orderBy: 'newsId ASC',
+    limit: limit,
+    offset: offset,
+  );
+  await db.close();
 
-  // }
+  return result.map((row) => News.fromJson(row)).toList();
+}
 }
