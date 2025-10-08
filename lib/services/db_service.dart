@@ -1,10 +1,10 @@
 import 'package:path/path.dart';
+import 'package:practiceapp/model/news.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DbService {
   Future<Database> openMyDatabase() async {
     final dataBasePath = await getDatabasesPath();
-    // print(dataBasePath);
 
     const databaseName = 'news.db';
     const createcmd =
@@ -16,7 +16,7 @@ class DbService {
     });
   }
 
-  Future<void> insertArticles(List<Map<String, String>> articles) async {
+  Future<void> insertArticles(List<News> articles) async {
     final db = await openMyDatabase();
     final batch = db.batch();
 
@@ -24,9 +24,9 @@ class DbService {
       batch.insert(
         'news',
         {
-          'newsId': article['article_id'] ?? '',
-          'title': article['title'] ?? '',
-          'description': article['description'] ?? '',
+          'newsId': article.articleId,
+          'title': article.title,
+          'description': article.description,
         },
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
@@ -36,10 +36,16 @@ class DbService {
     await db.close();
   }
 
-  Future<List<Map<String, dynamic>>> getAllArticles() async {
+  Future<List<News>> getAllArticles() async {
     final db = await openMyDatabase();
     final result = await db.query('news', orderBy: 'newsId ASC');
     await db.close();
-    return result;
+
+    return result.map((row) => News.fromJson(row)).toList();
   }
+
+  // Future<List<News>> getPaginatedArticles(int limit, int offset) async {
+  //   final db = await openMyDatabase();
+
+  // }
 }
