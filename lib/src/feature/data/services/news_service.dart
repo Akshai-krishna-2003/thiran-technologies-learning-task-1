@@ -1,23 +1,25 @@
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+// import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:practiceapp/src/feature/domain/model/news.dart';
 import 'dart:convert';
 
 class NewsService {
-  final String? apiKey = dotenv.env['API_KEY'];
-  final String apiUri = "https://newsdata.io/api/1/latest";
-  final String location = "China";
+  // final String? apiKey = dotenv.env['API_KEY'];
+  final String apiUri =
+      "https://script.google.com/macros/s/AKfycbyYadozyP0xcKCwEJ8Yc8B1-odZTpNSiGMiCkeaK1l627jkrzsddnVAmOIs2x8nPIW7/exec";
+  // final String location = "pizza";
 
   Future<List<News>> fetchArticles() async {
     try {
-      final uri = Uri.parse("$apiUri?apikey=${apiKey!}&q=$location");
+      final uri = Uri.parse(apiUri);
+      print("Fetching from: $uri");
       final response = await http.get(uri);
+      print("Response status: ${response.statusCode}");
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        final List articles = data['results'] ?? [];
 
-        return articles.map<News>((item) {
+        return data.map<News>((item) {
           return News.fromJson(item);
         }).toList();
       } else {

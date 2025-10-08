@@ -1,27 +1,27 @@
 class News {
-  final String articleId;
   final String title;
-  final String description;
+  final String url;
+  final String thumbNail;
 
   News({
-    required this.articleId,
     required this.title,
-    required this.description,
+    required this.url,
+    required this.thumbNail,
   });
 
   factory News.fromJson(Map<String, dynamic> json) {
     return News(
-      articleId: json['article_id']?.toString() ?? '',
       title: json['title']?.toString() ?? '',
-      description: json['description']?.toString() ?? '',
+      url: json['url']?.toString() ?? '',
+      thumbNail: json['thumbNail']?.toString() ?? '',
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'article_id': articleId,
       'title': title,
-      'description': description,
+      'url': url,
+      'thumbNail': thumbNail,
     };
   }
 }

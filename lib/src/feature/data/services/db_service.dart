@@ -5,10 +5,11 @@ import 'package:sqflite/sqflite.dart';
 class DbService {
   Future<Database> openMyDatabase() async {
     final dataBasePath = await getDatabasesPath();
+    print(dataBasePath);
 
     const databaseName = 'news.db';
     const createcmd =
-        "CREATE TABLE news(newsId TEXT PRIMARY KEY, title TEXT, description TEXT);";
+        "CREATE TABLE news(title TEXT PRIMARY KEY, url TEXT UNIQUE, thumbNail TEXT);";
 
     return openDatabase(join(dataBasePath, databaseName), version: 1,
         onCreate: (db, version) async {
@@ -24,9 +25,9 @@ class DbService {
       batch.insert(
         'news',
         {
-          'newsId': article.articleId,
           'title': article.title,
-          'description': article.description,
+          'url': article.url,
+          'thumbNail': article.thumbNail,
         },
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
@@ -38,23 +39,23 @@ class DbService {
 
   Future<List<News>> getAllArticles() async {
     final db = await openMyDatabase();
-    final result = await db.query('news', orderBy: 'newsId ASC');
+    final result = await db.query('news', orderBy: 'title ASC');
     await db.close();
 
     return result.map((row) => News.fromJson(row)).toList();
   }
 
-  // Paginated 
-  Future<List<News>> getArticlesPage({int offset = 0, int limit = 10}) async {
-  final db = await openMyDatabase();
-  final result = await db.query(
-    'news',
-    orderBy: 'newsId ASC',
-    limit: limit,
-    offset: offset,
-  );
-  await db.close();
+  // Paginated
+  Future<List<News>> getArticlesPage(int offset, int limit) async {
+    final db = await openMyDatabase();
+    final result = await db.query(
+      'news',
+      orderBy: 'title ASC',
+      limit: limit,
+      offset: offset,
+    );
+    await db.close();
 
-  return result.map((row) => News.fromJson(row)).toList();
-}
+    return result.map((row) => News.fromJson(row)).toList();
+  }
 }
