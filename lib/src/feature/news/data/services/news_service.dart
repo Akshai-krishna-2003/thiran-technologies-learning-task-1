@@ -1,4 +1,5 @@
 import 'package:http/http.dart' as http;
+import 'package:practiceapp/src/feature/feature2/data/services/feature2_service.dart';
 import 'package:practiceapp/src/feature/news/domain/model/news.dart';
 import 'dart:convert';
 import 'dart:isolate';
@@ -22,6 +23,8 @@ class NewsService {
 
         // Wait for the isolate to send the parsed list
         final List<News> articles = await receivePort.first as List<News>;
+
+        Feature2API().getFromApi();
 
         abcIsolate.kill;
 

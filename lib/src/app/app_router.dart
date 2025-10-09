@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:practiceapp/src/feature/news/presentation/screens/shell_screen.dart';
+import 'package:practiceapp/src/app/shell_screen.dart';
 import 'package:practiceapp/src/feature/news/presentation/screens/home_screen.dart';
-import 'package:practiceapp/src/feature/news/presentation/screens/page4_screen.dart';
-import 'package:practiceapp/src/feature/news/presentation/screens/page3_screen.dart';
-import 'package:practiceapp/src/feature/news/presentation/screens/page2_screen.dart';
-import 'package:practiceapp/src/feature/news/presentation/screens/page5_screen.dart';
+import 'package:practiceapp/src/othertasks/page4_screen.dart';
+import 'package:practiceapp/src/othertasks/page3_screen.dart';
+import 'package:practiceapp/src/feature/feature2/presentation/screens/page2_screen.dart';
+import 'package:practiceapp/src/othertasks/page5_screen.dart';
 
 final router = GoRouter(
   initialLocation: '/home',
