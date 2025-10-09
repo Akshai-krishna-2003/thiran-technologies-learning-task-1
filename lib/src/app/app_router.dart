@@ -1,0 +1,39 @@
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:practiceapp/src/feature/presentation/screens/shell_screen.dart';
+import 'package:practiceapp/src/feature/presentation/screens/home_screen.dart';
+import 'package:practiceapp/src/feature/presentation/screens/page4_screen.dart';
+import 'package:practiceapp/src/feature/presentation/screens/page3_screen.dart';
+import 'package:practiceapp/src/feature/presentation/screens/page2_screen.dart';
+import 'package:practiceapp/src/feature/presentation/screens/page5_screen.dart';
+
+final router = GoRouter(
+  initialLocation: '/home',
+  routes: [
+    ShellRoute(
+      builder: (context, state, child) => ShellScreen(child: child),
+      routes: [
+        GoRoute(
+          path: '/home',
+          builder: (_, __) => const HomeScreen(),
+        ),
+        GoRoute(
+          path: '/page2',
+          builder: (_, __) => const Page2Screen(),
+        ),
+        GoRoute(
+          path: '/page3',
+          builder: (_, __) => const Page3Screen(),
+        ),
+        GoRoute(
+          path: '/page4',
+          builder: (_, __) => const Page4Screen(),
+        ),
+        GoRoute(
+          path: '/page5',
+          builder: (_, __) => const Page5Screen(),
+        ),
+      ],
+    ),
+  ],
+);

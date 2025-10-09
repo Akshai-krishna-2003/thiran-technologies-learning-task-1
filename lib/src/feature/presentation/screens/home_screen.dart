@@ -84,8 +84,8 @@ class HomeScreen extends ConsumerWidget {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              article.thumbNail.isNotEmpty
-                                  ? article.thumbNail
+                              article.description.isNotEmpty
+                                  ? article.description
                                   : 'No Description',
                               style: const TextStyle(fontSize: 14),
                             ),

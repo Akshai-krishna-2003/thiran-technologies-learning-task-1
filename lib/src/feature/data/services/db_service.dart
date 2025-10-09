@@ -9,7 +9,7 @@ class DbService {
 
     const databaseName = 'news.db';
     const createcmd =
-        "CREATE TABLE news(title TEXT PRIMARY KEY, url TEXT UNIQUE, thumbNail TEXT);";
+        "CREATE TABLE news(author TEXT, title TEXT, description TEXT);";
 
     return openDatabase(join(dataBasePath, databaseName), version: 1,
         onCreate: (db, version) async {
@@ -25,9 +25,9 @@ class DbService {
       batch.insert(
         'news',
         {
+          'author': article.author,
           'title': article.title,
-          'url': article.url,
-          'thumbNail': article.thumbNail,
+          'description': article.description,
         },
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
@@ -39,7 +39,7 @@ class DbService {
 
   Future<List<News>> getAllArticles() async {
     final db = await openMyDatabase();
-    final result = await db.query('news', orderBy: 'title ASC');
+    final result = await db.query('news', orderBy: 'author ASC');
     await db.close();
 
     return result.map((row) => News.fromJson(row)).toList();
@@ -50,7 +50,7 @@ class DbService {
     final db = await openMyDatabase();
     final result = await db.query(
       'news',
-      orderBy: 'title ASC',
+      orderBy: 'author ASC',
       limit: limit,
       offset: offset,
     );

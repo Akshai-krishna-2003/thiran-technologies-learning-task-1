@@ -1,27 +1,27 @@
 class News {
+  final String author;
   final String title;
-  final String url;
-  final String thumbNail;
+  final String description;
 
   News({
+    required this.author,
     required this.title,
-    required this.url,
-    required this.thumbNail,
+    required this.description,
   });
 
   factory News.fromJson(Map<String, dynamic> json) {
     return News(
+      author: json['author']?.toString() ?? '',
       title: json['title']?.toString() ?? '',
-      url: json['url']?.toString() ?? '',
-      thumbNail: json['thumbNail']?.toString() ?? '',
+      description: json['description']?.toString() ?? '',
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
+      'author': author,
       'title': title,
-      'url': url,
-      'thumbNail': thumbNail,
+      'description': description,
     };
   }
 }

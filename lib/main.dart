@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:practiceapp/src/feature/presentation/screens/home_screen.dart';
+import 'package:practiceapp/src/app/app_router.dart';
 
 void main() async {
   await dotenv.load(fileName: ".env");
-  runApp(ProviderScope(
-      child:
-          const MyApp())); // I use ProviderScope here so I can access the riverpod anywhere in my app lol
+  runApp(ProviderScope(child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -15,8 +13,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: HomeScreen(),
+    return MaterialApp.router(
+      debugShowCheckedModeBanner: false,
+      title: 'Practice App',
+      theme: ThemeData(useMaterial3: true, colorSchemeSeed: Colors.blue),
+      routerConfig: router,
     );
   }
 }
