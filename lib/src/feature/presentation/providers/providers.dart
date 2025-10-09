@@ -27,7 +27,7 @@ class PaginatedArticlesNotifier extends StateNotifier<AsyncValue<List<News>>> {
 
   PaginatedArticlesNotifier(this.dbService)
       : super(const AsyncValue.loading()) {
-    loadMore(); 
+    loadMore();
   }
 
   Future<void> loadMore() async {

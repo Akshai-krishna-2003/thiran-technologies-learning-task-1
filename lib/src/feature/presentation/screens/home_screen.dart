@@ -3,15 +3,37 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:practiceapp/src/feature/domain/model/news.dart';
 import 'package:practiceapp/src/feature/presentation/providers/providers.dart';
 
-class HomeScreen extends ConsumerWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    // Watch sync state (API -> DB)
-    final syncState = ref.watch(syncArticlesProvider);
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+}
 
-    // Watch paginated state (DB -> UI)
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - 100) {
+        ref.read(paginatedArticlesProvider.notifier).loadMore();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final syncState = ref.watch(syncArticlesProvider);
     final asyncArticles = ref.watch(paginatedArticlesProvider);
 
     return Scaffold(
@@ -28,16 +50,12 @@ class HomeScreen extends ConsumerWidget {
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () async {
-              // Refresh DB from API
               await ref.refresh(syncArticlesProvider.future);
-              // Reset pagination after DB update
               ref.read(paginatedArticlesProvider.notifier).refresh();
             },
           ),
         ],
       ),
-
-      // Body
       body: syncState.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, _) => Center(child: Text("Sync error: $err")),
@@ -48,53 +66,44 @@ class HomeScreen extends ConsumerWidget {
                 return const Center(child: Text("No articles found"));
               }
 
-              return NotificationListener<ScrollNotification>(
-                onNotification: (scrollInfo) {
-                  if (scrollInfo.metrics.pixels ==
-                      scrollInfo.metrics.maxScrollExtent) {
-                    // reached bottom -> load next page
-                    ref.read(paginatedArticlesProvider.notifier).loadMore();
-                  }
-                  return false;
+              return ListView.builder(
+                controller: _scrollController,
+                itemCount: articles.length,
+                itemBuilder: (context, index) {
+                  final News article = articles[index];
+                  return Card(
+                    margin:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    elevation: 3,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            article.title.isNotEmpty
+                                ? article.title
+                                : 'No Title',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            article.description.isNotEmpty
+                                ? article.description
+                                : 'No Description',
+                            style: const TextStyle(fontSize: 14),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
                 },
-                child: ListView.builder(
-                  itemCount: articles.length,
-                  itemBuilder: (context, index) {
-                    final News article = articles[index];
-                    return Card(
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 8),
-                      elevation: 3,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              article.title.isNotEmpty
-                                  ? article.title
-                                  : 'No Title',
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              article.description.isNotEmpty
-                                  ? article.description
-                                  : 'No Description',
-                              style: const TextStyle(fontSize: 14),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
               );
             },
             loading: () => const Center(child: CircularProgressIndicator()),
