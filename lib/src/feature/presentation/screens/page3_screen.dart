@@ -7,7 +7,13 @@ class Page3Screen extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: Text('Page 3'),
+        child: Text(
+          'Page 3',
+          style: TextStyle(
+            fontSize: 20,
+            color: Colors.blue,
+          ),
+        ),
       ),
     );
   }

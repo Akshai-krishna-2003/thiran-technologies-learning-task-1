@@ -2,6 +2,7 @@
 import 'package:http/http.dart' as http;
 import 'package:practiceapp/src/feature/domain/model/news.dart';
 import 'dart:convert';
+import 'dart:isolate';
 
 class NewsService {
   // final String? apiKey = dotenv.env['API_KEY'];
@@ -10,6 +11,7 @@ class NewsService {
   // final String location = "pizza";
 
   Future<List<News>> fetchArticles() async {
+    // await Isolate.spawn(entryPoint, message);
     try {
       final uri = Uri.parse(apiUri);
       // print("Fetching from: $uri");
@@ -19,7 +21,7 @@ class NewsService {
 
       if (res.statusCode == 200) {
         final Map<String, dynamic> data = jsonDecode(res.body);
-        final List<dynamic> articles = data['articles']; 
+        final List<dynamic> articles = data['articles'];
         print("Total articles fetched: ${articles.length}");
 
         return articles.map<News>((item) => News.fromJson(item)).toList();
