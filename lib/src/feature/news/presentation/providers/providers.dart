@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:practiceapp/src/feature/domain/model/news.dart';
-import 'package:practiceapp/src/feature/data/services/news_service.dart';
-import 'package:practiceapp/src/feature/data/services/db_service.dart';
+import 'package:practiceapp/src/feature/news/domain/model/news.dart';
+import 'package:practiceapp/src/feature/news/data/services/news_service.dart';
+import 'package:practiceapp/src/feature/news/data/services/db_service.dart';
 
 // Services
 final newsServiceProvider = Provider<NewsService>((ref) => NewsService());

@@ -1,5 +1,5 @@
 import 'package:path/path.dart';
-import 'package:practiceapp/src/feature/domain/model/news.dart';
+import 'package:practiceapp/src/feature/news/domain/model/news.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DbService {

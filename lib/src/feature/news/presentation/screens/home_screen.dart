@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:practiceapp/src/feature/domain/model/news.dart';
-import 'package:practiceapp/src/feature/presentation/providers/providers.dart';
+import 'package:practiceapp/src/feature/news/domain/model/news.dart';
+import 'package:practiceapp/src/feature/news/presentation/providers/providers.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
