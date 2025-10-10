@@ -26,7 +26,7 @@ class NewsService {
 
         Feature2API().getFromApi();
 
-        abcIsolate.kill;
+        abcIsolate.kill();
 
         print("Total articles parsed: ${articles.length}");
         return articles;
@@ -42,6 +42,7 @@ class NewsService {
   static void _parseNewsData(List<dynamic> args) {
     final SendPort sendPort = args[0];
     final String responseBody = args[1];
+    print("News response: $responseBody");
 
     try {
       final Map<String, dynamic> data = jsonDecode(responseBody);
