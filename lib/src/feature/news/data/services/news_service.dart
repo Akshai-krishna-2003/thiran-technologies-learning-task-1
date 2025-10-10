@@ -1,5 +1,5 @@
 import 'package:http/http.dart' as http;
-import 'package:practiceapp/src/feature/feature2/data/services/feature2_service.dart';
+import 'package:practiceapp/src/feature/feature2/data/services/feature2api_service.dart';
 import 'package:practiceapp/src/feature/news/domain/model/news.dart';
 import 'dart:convert';
 import 'dart:isolate';
@@ -24,7 +24,7 @@ class NewsService {
         // Wait for the isolate to send the parsed list
         final List<News> articles = await receivePort.first as List<News>;
 
-        Feature2API().getFromApi();
+        // Feature2API().getFromApi();
 
         abcIsolate.kill();
 
@@ -42,7 +42,7 @@ class NewsService {
   static void _parseNewsData(List<dynamic> args) {
     final SendPort sendPort = args[0];
     final String responseBody = args[1];
-    print("News response: $responseBody");
+    // print("News response: $responseBody");
 
     try {
       final Map<String, dynamic> data = jsonDecode(responseBody);

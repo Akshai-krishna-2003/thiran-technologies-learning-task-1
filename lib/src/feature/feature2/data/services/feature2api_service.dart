@@ -7,7 +7,7 @@ class Feature2API {
   final apiUri = "https://24pullrequests.com/users.json?page=100";
 
   Future<List<Feature2>> getFromApi() async {
-    print("abcd!");
+    // print("abcd!");
     try {
       final uri = Uri.parse(apiUri);
       final res = await http.get(uri);
