@@ -21,6 +21,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       if (_scrollController.position.pixels >=
           _scrollController.position.maxScrollExtent - 100) {
         ref.read(paginatedArticlesProvider.notifier).loadMore();
+        print("");
       }
     });
   }
@@ -65,7 +66,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               if (articles.isEmpty) {
                 return const Center(child: Text("No articles found"));
               }
-
+              print("Length is: ${articles.length}");
               return ListView.builder(
                 controller: _scrollController,
                 itemCount: articles.length,

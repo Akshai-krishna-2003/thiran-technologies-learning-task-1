@@ -17,8 +17,10 @@ class NewsService {
         final receivePort = ReceivePort();
 
         // Offload heavy JSON parsing to a background isolate
-        await Isolate.spawn(_parseNewsData, [receivePort.sendPort, res.body]);
+        final abcIsolate = await Isolate.spawn(
+            _parseNewsData, [receivePort.sendPort, res.body]);
         final List<News> articles = await receivePort.first as List<News>;
+        abcIsolate.kill();
 
         return articles;
       } else {
