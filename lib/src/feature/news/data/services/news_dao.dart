@@ -18,10 +18,13 @@ class NewsDao extends DatabaseAccessor<AppDatabase> with _$NewsDaoMixin {
     final rootIsolateToken = RootIsolateToken.instance!;
 
     // Spawn isolate and pass token + articles
-    await Isolate.spawn(_insertInBackground, [receivePort.sendPort, rootIsolateToken, articles]);
+    final defIsolate = await Isolate.spawn(_insertInBackground,
+        [receivePort.sendPort, rootIsolateToken, articles]);
 
     // Wait until isolate confirms completion
     await receivePort.first;
+
+    defIsolate.kill();
   }
 
   /// Fetch all articles
