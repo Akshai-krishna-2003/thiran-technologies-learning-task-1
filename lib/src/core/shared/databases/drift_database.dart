@@ -14,5 +14,6 @@ LazyDatabase _openConnection() {
 }
 
 /// Creates a DatabaseConnection usable by Drift.
-DatabaseConnection connect() =>
-    DatabaseConnection.fromExecutor(_openConnection());
+DatabaseConnection connect() => 
+  DatabaseConnection.fromExecutor(_openConnection());
+

@@ -19,6 +19,7 @@ class Feature2API {
             _parseFeat2Data, [recievePort.sendPort, res.body]);
 
         final getData = await recievePort.first as List<Feature2>;
+        print("This size of feature 2 data is ${getData.length}");
 
         feature2Isolate.kill();
         return getData;

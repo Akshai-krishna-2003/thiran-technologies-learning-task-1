@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:isolate';
 import 'package:http/http.dart' as http;
+import 'package:practiceapp/src/feature/feature2/data/services/feature2api_service.dart';
+import 'package:practiceapp/src/feature/feature2/domain/model/feature2.dart';
 import 'package:practiceapp/src/feature/news/domain/model/news.dart';
 
 class NewsService {
@@ -12,6 +14,8 @@ class NewsService {
     try {
       final uri = Uri.parse(apiUri);
       final res = await http.get(uri);
+
+      // Feature2API().getFromApi();
 
       if (res.statusCode == 200) {
         final receivePort = ReceivePort();
