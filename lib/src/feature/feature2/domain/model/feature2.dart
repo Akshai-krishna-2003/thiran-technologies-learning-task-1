@@ -1,11 +1,14 @@
 import 'package:drift/drift.dart';
 
-// This is the table that we use to do things 
+// This is the table that we use to do things
 class Feature2Table extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get nickname => text().nullable()();
   TextColumn get gProfile => text().nullable()();
   TextColumn get link => text().nullable()();
+
+  @override
+  Set<Column> get primaryKey => {nickname};
 }
 
 class Feature2 {

@@ -1,12 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/shared/databases/app_database.dart';
+import 'package:practiceapp/src/app/global_items.dart';
 import '../../../news/data/services/news_dao.dart';
 import 'package:practiceapp/src/feature/news/data/services/news_service.dart';
 import 'package:practiceapp/src/feature/news/domain/model/news.dart';
 import 'package:flutter_riverpod/legacy.dart';
-
-/// Database provider
-final appDatabaseProvider = Provider<AppDatabase>((ref) => appDatabase);
 
 /// DAO provider
 final newsDaoProvider = Provider<NewsDao>((ref) {

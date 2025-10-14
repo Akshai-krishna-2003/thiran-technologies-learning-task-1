@@ -1,7 +1,7 @@
 import 'dart:isolate';
 import 'package:drift/drift.dart';
 import 'package:flutter/services.dart';
-import 'package:practiceapp/src/app/app_isolate_token.dart';
+import 'package:practiceapp/src/app/global_items.dart';
 import '../../../../core/shared/databases/app_database.dart';
 import '../../domain/model/news.dart';
 
