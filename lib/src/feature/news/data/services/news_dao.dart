@@ -1,6 +1,7 @@
 import 'dart:isolate';
 import 'package:drift/drift.dart';
 import 'package:flutter/services.dart';
+import 'package:practiceapp/src/app/app_isolate_token.dart';
 import '../../../../core/shared/databases/app_database.dart';
 import '../../domain/model/news.dart';
 
@@ -15,7 +16,7 @@ class NewsDao extends DatabaseAccessor<AppDatabase> with _$NewsDaoMixin {
     final receivePort = ReceivePort();
 
     //  Get root isolate token from the main Flutter isolate
-    final rootIsolateToken = RootIsolateToken.instance!;
+    // final rootIsolateToken = RootIsolateToken.instance!;  // Now this is global right no need to create this again and again
 
     // Spawn isolate and pass token + articles
     final defIsolate = await Isolate.spawn(_insertInBackground,
