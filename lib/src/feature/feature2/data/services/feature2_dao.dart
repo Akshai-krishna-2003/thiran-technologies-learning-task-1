@@ -55,7 +55,7 @@ void _insertFunctionVal(List<dynamic> args) async {
             (a) => Feature2TableCompanion.insert(
               nickname: Value(a.nickname),
               gProfile: Value(a.gProfile),
-              link: Value(a.link),
+              link: Value(a.link), 
             ),
           )
           .toList(),

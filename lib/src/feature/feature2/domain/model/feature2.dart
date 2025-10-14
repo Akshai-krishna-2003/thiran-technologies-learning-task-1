@@ -6,9 +6,6 @@ class Feature2Table extends Table {
   TextColumn get nickname => text().nullable()();
   TextColumn get gProfile => text().nullable()();
   TextColumn get link => text().nullable()();
-
-  @override
-  Set<Column> get primaryKey => {nickname};
 }
 
 class Feature2 {
