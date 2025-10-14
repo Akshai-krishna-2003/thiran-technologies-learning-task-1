@@ -264,16 +264,279 @@ class NewsTableCompanion extends UpdateCompanion<NewsTableData> {
   }
 }
 
+class $Feature2TableTable extends Feature2Table
+    with TableInfo<$Feature2TableTable, Feature2TableData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $Feature2TableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _nicknameMeta =
+      const VerificationMeta('nickname');
+  @override
+  late final GeneratedColumn<String> nickname = GeneratedColumn<String>(
+      'nickname', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _gProfileMeta =
+      const VerificationMeta('gProfile');
+  @override
+  late final GeneratedColumn<String> gProfile = GeneratedColumn<String>(
+      'g_profile', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _linkMeta = const VerificationMeta('link');
+  @override
+  late final GeneratedColumn<String> link = GeneratedColumn<String>(
+      'link', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [id, nickname, gProfile, link];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'feature2_table';
+  @override
+  VerificationContext validateIntegrity(Insertable<Feature2TableData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('nickname')) {
+      context.handle(_nicknameMeta,
+          nickname.isAcceptableOrUnknown(data['nickname']!, _nicknameMeta));
+    }
+    if (data.containsKey('g_profile')) {
+      context.handle(_gProfileMeta,
+          gProfile.isAcceptableOrUnknown(data['g_profile']!, _gProfileMeta));
+    }
+    if (data.containsKey('link')) {
+      context.handle(
+          _linkMeta, link.isAcceptableOrUnknown(data['link']!, _linkMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Feature2TableData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Feature2TableData(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      nickname: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}nickname']),
+      gProfile: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}g_profile']),
+      link: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}link']),
+    );
+  }
+
+  @override
+  $Feature2TableTable createAlias(String alias) {
+    return $Feature2TableTable(attachedDatabase, alias);
+  }
+}
+
+class Feature2TableData extends DataClass
+    implements Insertable<Feature2TableData> {
+  final int id;
+  final String? nickname;
+  final String? gProfile;
+  final String? link;
+  const Feature2TableData(
+      {required this.id, this.nickname, this.gProfile, this.link});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    if (!nullToAbsent || nickname != null) {
+      map['nickname'] = Variable<String>(nickname);
+    }
+    if (!nullToAbsent || gProfile != null) {
+      map['g_profile'] = Variable<String>(gProfile);
+    }
+    if (!nullToAbsent || link != null) {
+      map['link'] = Variable<String>(link);
+    }
+    return map;
+  }
+
+  Feature2TableCompanion toCompanion(bool nullToAbsent) {
+    return Feature2TableCompanion(
+      id: Value(id),
+      nickname: nickname == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nickname),
+      gProfile: gProfile == null && nullToAbsent
+          ? const Value.absent()
+          : Value(gProfile),
+      link: link == null && nullToAbsent ? const Value.absent() : Value(link),
+    );
+  }
+
+  factory Feature2TableData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Feature2TableData(
+      id: serializer.fromJson<int>(json['id']),
+      nickname: serializer.fromJson<String?>(json['nickname']),
+      gProfile: serializer.fromJson<String?>(json['gProfile']),
+      link: serializer.fromJson<String?>(json['link']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'nickname': serializer.toJson<String?>(nickname),
+      'gProfile': serializer.toJson<String?>(gProfile),
+      'link': serializer.toJson<String?>(link),
+    };
+  }
+
+  Feature2TableData copyWith(
+          {int? id,
+          Value<String?> nickname = const Value.absent(),
+          Value<String?> gProfile = const Value.absent(),
+          Value<String?> link = const Value.absent()}) =>
+      Feature2TableData(
+        id: id ?? this.id,
+        nickname: nickname.present ? nickname.value : this.nickname,
+        gProfile: gProfile.present ? gProfile.value : this.gProfile,
+        link: link.present ? link.value : this.link,
+      );
+  Feature2TableData copyWithCompanion(Feature2TableCompanion data) {
+    return Feature2TableData(
+      id: data.id.present ? data.id.value : this.id,
+      nickname: data.nickname.present ? data.nickname.value : this.nickname,
+      gProfile: data.gProfile.present ? data.gProfile.value : this.gProfile,
+      link: data.link.present ? data.link.value : this.link,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Feature2TableData(')
+          ..write('id: $id, ')
+          ..write('nickname: $nickname, ')
+          ..write('gProfile: $gProfile, ')
+          ..write('link: $link')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, nickname, gProfile, link);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Feature2TableData &&
+          other.id == this.id &&
+          other.nickname == this.nickname &&
+          other.gProfile == this.gProfile &&
+          other.link == this.link);
+}
+
+class Feature2TableCompanion extends UpdateCompanion<Feature2TableData> {
+  final Value<int> id;
+  final Value<String?> nickname;
+  final Value<String?> gProfile;
+  final Value<String?> link;
+  const Feature2TableCompanion({
+    this.id = const Value.absent(),
+    this.nickname = const Value.absent(),
+    this.gProfile = const Value.absent(),
+    this.link = const Value.absent(),
+  });
+  Feature2TableCompanion.insert({
+    this.id = const Value.absent(),
+    this.nickname = const Value.absent(),
+    this.gProfile = const Value.absent(),
+    this.link = const Value.absent(),
+  });
+  static Insertable<Feature2TableData> custom({
+    Expression<int>? id,
+    Expression<String>? nickname,
+    Expression<String>? gProfile,
+    Expression<String>? link,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (nickname != null) 'nickname': nickname,
+      if (gProfile != null) 'g_profile': gProfile,
+      if (link != null) 'link': link,
+    });
+  }
+
+  Feature2TableCompanion copyWith(
+      {Value<int>? id,
+      Value<String?>? nickname,
+      Value<String?>? gProfile,
+      Value<String?>? link}) {
+    return Feature2TableCompanion(
+      id: id ?? this.id,
+      nickname: nickname ?? this.nickname,
+      gProfile: gProfile ?? this.gProfile,
+      link: link ?? this.link,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (nickname.present) {
+      map['nickname'] = Variable<String>(nickname.value);
+    }
+    if (gProfile.present) {
+      map['g_profile'] = Variable<String>(gProfile.value);
+    }
+    if (link.present) {
+      map['link'] = Variable<String>(link.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Feature2TableCompanion(')
+          ..write('id: $id, ')
+          ..write('nickname: $nickname, ')
+          ..write('gProfile: $gProfile, ')
+          ..write('link: $link')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $NewsTableTable newsTable = $NewsTableTable(this);
+  late final $Feature2TableTable feature2Table = $Feature2TableTable(this);
   late final NewsDao newsDao = NewsDao(this as AppDatabase);
+  late final Feature2Dao feature2Dao = Feature2Dao(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [newsTable];
+  List<DatabaseSchemaEntity> get allSchemaEntities =>
+      [newsTable, feature2Table];
 }
 
 typedef $$NewsTableTableCreateCompanionBuilder = NewsTableCompanion Function({
@@ -426,10 +689,164 @@ typedef $$NewsTableTableProcessedTableManager = ProcessedTableManager<
     ),
     NewsTableData,
     PrefetchHooks Function()>;
+typedef $$Feature2TableTableCreateCompanionBuilder = Feature2TableCompanion
+    Function({
+  Value<int> id,
+  Value<String?> nickname,
+  Value<String?> gProfile,
+  Value<String?> link,
+});
+typedef $$Feature2TableTableUpdateCompanionBuilder = Feature2TableCompanion
+    Function({
+  Value<int> id,
+  Value<String?> nickname,
+  Value<String?> gProfile,
+  Value<String?> link,
+});
+
+class $$Feature2TableTableFilterComposer
+    extends Composer<_$AppDatabase, $Feature2TableTable> {
+  $$Feature2TableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get nickname => $composableBuilder(
+      column: $table.nickname, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get gProfile => $composableBuilder(
+      column: $table.gProfile, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get link => $composableBuilder(
+      column: $table.link, builder: (column) => ColumnFilters(column));
+}
+
+class $$Feature2TableTableOrderingComposer
+    extends Composer<_$AppDatabase, $Feature2TableTable> {
+  $$Feature2TableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get nickname => $composableBuilder(
+      column: $table.nickname, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get gProfile => $composableBuilder(
+      column: $table.gProfile, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get link => $composableBuilder(
+      column: $table.link, builder: (column) => ColumnOrderings(column));
+}
+
+class $$Feature2TableTableAnnotationComposer
+    extends Composer<_$AppDatabase, $Feature2TableTable> {
+  $$Feature2TableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get nickname =>
+      $composableBuilder(column: $table.nickname, builder: (column) => column);
+
+  GeneratedColumn<String> get gProfile =>
+      $composableBuilder(column: $table.gProfile, builder: (column) => column);
+
+  GeneratedColumn<String> get link =>
+      $composableBuilder(column: $table.link, builder: (column) => column);
+}
+
+class $$Feature2TableTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $Feature2TableTable,
+    Feature2TableData,
+    $$Feature2TableTableFilterComposer,
+    $$Feature2TableTableOrderingComposer,
+    $$Feature2TableTableAnnotationComposer,
+    $$Feature2TableTableCreateCompanionBuilder,
+    $$Feature2TableTableUpdateCompanionBuilder,
+    (
+      Feature2TableData,
+      BaseReferences<_$AppDatabase, $Feature2TableTable, Feature2TableData>
+    ),
+    Feature2TableData,
+    PrefetchHooks Function()> {
+  $$Feature2TableTableTableManager(_$AppDatabase db, $Feature2TableTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$Feature2TableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$Feature2TableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$Feature2TableTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<String?> nickname = const Value.absent(),
+            Value<String?> gProfile = const Value.absent(),
+            Value<String?> link = const Value.absent(),
+          }) =>
+              Feature2TableCompanion(
+            id: id,
+            nickname: nickname,
+            gProfile: gProfile,
+            link: link,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<String?> nickname = const Value.absent(),
+            Value<String?> gProfile = const Value.absent(),
+            Value<String?> link = const Value.absent(),
+          }) =>
+              Feature2TableCompanion.insert(
+            id: id,
+            nickname: nickname,
+            gProfile: gProfile,
+            link: link,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$Feature2TableTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $Feature2TableTable,
+    Feature2TableData,
+    $$Feature2TableTableFilterComposer,
+    $$Feature2TableTableOrderingComposer,
+    $$Feature2TableTableAnnotationComposer,
+    $$Feature2TableTableCreateCompanionBuilder,
+    $$Feature2TableTableUpdateCompanionBuilder,
+    (
+      Feature2TableData,
+      BaseReferences<_$AppDatabase, $Feature2TableTable, Feature2TableData>
+    ),
+    Feature2TableData,
+    PrefetchHooks Function()>;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
   $AppDatabaseManager(this._db);
   $$NewsTableTableTableManager get newsTable =>
       $$NewsTableTableTableManager(_db, _db.newsTable);
+  $$Feature2TableTableTableManager get feature2Table =>
+      $$Feature2TableTableTableManager(_db, _db.feature2Table);
 }

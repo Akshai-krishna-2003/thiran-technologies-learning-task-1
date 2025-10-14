@@ -9,11 +9,11 @@ LazyDatabase _openConnection() {
   return LazyDatabase(() async {
     final dir = await getApplicationDocumentsDirectory();
     final file = File(p.join(dir.path, 'app_database.sqlite'));
+    // print("Final path of database is: ${file.path}");
     return NativeDatabase.createInBackground(file);
   });
 }
 
 /// Creates a DatabaseConnection usable by Drift.
-DatabaseConnection connect() => 
-  DatabaseConnection.fromExecutor(_openConnection());
-
+DatabaseConnection connect() =>
+    DatabaseConnection.fromExecutor(_openConnection());
