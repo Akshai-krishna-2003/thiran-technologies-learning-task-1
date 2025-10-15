@@ -524,19 +524,237 @@ class Feature2TableCompanion extends UpdateCompanion<Feature2TableData> {
   }
 }
 
+class $Feature3TableTable extends Feature3Table
+    with TableInfo<$Feature3TableTable, Feature3TableData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $Feature3TableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+      'title', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _descriptionMeta =
+      const VerificationMeta('description');
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+      'description', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [id, title, description];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'feature3_table';
+  @override
+  VerificationContext validateIntegrity(Insertable<Feature3TableData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+          _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
+    } else if (isInserting) {
+      context.missing(_titleMeta);
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+          _descriptionMeta,
+          description.isAcceptableOrUnknown(
+              data['description']!, _descriptionMeta));
+    } else if (isInserting) {
+      context.missing(_descriptionMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Feature3TableData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Feature3TableData(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      title: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
+      description: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}description'])!,
+    );
+  }
+
+  @override
+  $Feature3TableTable createAlias(String alias) {
+    return $Feature3TableTable(attachedDatabase, alias);
+  }
+}
+
+class Feature3TableData extends DataClass
+    implements Insertable<Feature3TableData> {
+  final int id;
+  final String title;
+  final String description;
+  const Feature3TableData(
+      {required this.id, required this.title, required this.description});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['title'] = Variable<String>(title);
+    map['description'] = Variable<String>(description);
+    return map;
+  }
+
+  Feature3TableCompanion toCompanion(bool nullToAbsent) {
+    return Feature3TableCompanion(
+      id: Value(id),
+      title: Value(title),
+      description: Value(description),
+    );
+  }
+
+  factory Feature3TableData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Feature3TableData(
+      id: serializer.fromJson<int>(json['id']),
+      title: serializer.fromJson<String>(json['title']),
+      description: serializer.fromJson<String>(json['description']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'title': serializer.toJson<String>(title),
+      'description': serializer.toJson<String>(description),
+    };
+  }
+
+  Feature3TableData copyWith({int? id, String? title, String? description}) =>
+      Feature3TableData(
+        id: id ?? this.id,
+        title: title ?? this.title,
+        description: description ?? this.description,
+      );
+  Feature3TableData copyWithCompanion(Feature3TableCompanion data) {
+    return Feature3TableData(
+      id: data.id.present ? data.id.value : this.id,
+      title: data.title.present ? data.title.value : this.title,
+      description:
+          data.description.present ? data.description.value : this.description,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Feature3TableData(')
+          ..write('id: $id, ')
+          ..write('title: $title, ')
+          ..write('description: $description')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, title, description);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Feature3TableData &&
+          other.id == this.id &&
+          other.title == this.title &&
+          other.description == this.description);
+}
+
+class Feature3TableCompanion extends UpdateCompanion<Feature3TableData> {
+  final Value<int> id;
+  final Value<String> title;
+  final Value<String> description;
+  const Feature3TableCompanion({
+    this.id = const Value.absent(),
+    this.title = const Value.absent(),
+    this.description = const Value.absent(),
+  });
+  Feature3TableCompanion.insert({
+    this.id = const Value.absent(),
+    required String title,
+    required String description,
+  })  : title = Value(title),
+        description = Value(description);
+  static Insertable<Feature3TableData> custom({
+    Expression<int>? id,
+    Expression<String>? title,
+    Expression<String>? description,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (title != null) 'title': title,
+      if (description != null) 'description': description,
+    });
+  }
+
+  Feature3TableCompanion copyWith(
+      {Value<int>? id, Value<String>? title, Value<String>? description}) {
+    return Feature3TableCompanion(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Feature3TableCompanion(')
+          ..write('id: $id, ')
+          ..write('title: $title, ')
+          ..write('description: $description')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $NewsTableTable newsTable = $NewsTableTable(this);
   late final $Feature2TableTable feature2Table = $Feature2TableTable(this);
+  late final $Feature3TableTable feature3Table = $Feature3TableTable(this);
   late final NewsDao newsDao = NewsDao(this as AppDatabase);
   late final Feature2Dao feature2Dao = Feature2Dao(this as AppDatabase);
+  late final Feature3Dao feature3Dao = Feature3Dao(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [newsTable, feature2Table];
+      [newsTable, feature2Table, feature3Table];
 }
 
 typedef $$NewsTableTableCreateCompanionBuilder = NewsTableCompanion Function({
@@ -841,6 +1059,143 @@ typedef $$Feature2TableTableProcessedTableManager = ProcessedTableManager<
     ),
     Feature2TableData,
     PrefetchHooks Function()>;
+typedef $$Feature3TableTableCreateCompanionBuilder = Feature3TableCompanion
+    Function({
+  Value<int> id,
+  required String title,
+  required String description,
+});
+typedef $$Feature3TableTableUpdateCompanionBuilder = Feature3TableCompanion
+    Function({
+  Value<int> id,
+  Value<String> title,
+  Value<String> description,
+});
+
+class $$Feature3TableTableFilterComposer
+    extends Composer<_$AppDatabase, $Feature3TableTable> {
+  $$Feature3TableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get title => $composableBuilder(
+      column: $table.title, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => ColumnFilters(column));
+}
+
+class $$Feature3TableTableOrderingComposer
+    extends Composer<_$AppDatabase, $Feature3TableTable> {
+  $$Feature3TableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get title => $composableBuilder(
+      column: $table.title, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => ColumnOrderings(column));
+}
+
+class $$Feature3TableTableAnnotationComposer
+    extends Composer<_$AppDatabase, $Feature3TableTable> {
+  $$Feature3TableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => column);
+}
+
+class $$Feature3TableTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $Feature3TableTable,
+    Feature3TableData,
+    $$Feature3TableTableFilterComposer,
+    $$Feature3TableTableOrderingComposer,
+    $$Feature3TableTableAnnotationComposer,
+    $$Feature3TableTableCreateCompanionBuilder,
+    $$Feature3TableTableUpdateCompanionBuilder,
+    (
+      Feature3TableData,
+      BaseReferences<_$AppDatabase, $Feature3TableTable, Feature3TableData>
+    ),
+    Feature3TableData,
+    PrefetchHooks Function()> {
+  $$Feature3TableTableTableManager(_$AppDatabase db, $Feature3TableTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$Feature3TableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$Feature3TableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$Feature3TableTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<String> title = const Value.absent(),
+            Value<String> description = const Value.absent(),
+          }) =>
+              Feature3TableCompanion(
+            id: id,
+            title: title,
+            description: description,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required String title,
+            required String description,
+          }) =>
+              Feature3TableCompanion.insert(
+            id: id,
+            title: title,
+            description: description,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$Feature3TableTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $Feature3TableTable,
+    Feature3TableData,
+    $$Feature3TableTableFilterComposer,
+    $$Feature3TableTableOrderingComposer,
+    $$Feature3TableTableAnnotationComposer,
+    $$Feature3TableTableCreateCompanionBuilder,
+    $$Feature3TableTableUpdateCompanionBuilder,
+    (
+      Feature3TableData,
+      BaseReferences<_$AppDatabase, $Feature3TableTable, Feature3TableData>
+    ),
+    Feature3TableData,
+    PrefetchHooks Function()>;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -849,4 +1204,6 @@ class $AppDatabaseManager {
       $$NewsTableTableTableManager(_db, _db.newsTable);
   $$Feature2TableTableTableManager get feature2Table =>
       $$Feature2TableTableTableManager(_db, _db.feature2Table);
+  $$Feature3TableTableTableManager get feature3Table =>
+      $$Feature3TableTableTableManager(_db, _db.feature3Table);
 }
