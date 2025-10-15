@@ -4,34 +4,60 @@ import 'package:http/http.dart' as http;
 import 'package:practiceapp/src/feature/feature3/domain/model/feature3.dart';
 
 class Feature3Api {
-  final link = "https://api.artic.edu/api/v1/artworks?limit=100";
+  final String link = "https://api.artic.edu/api/v1/artworks?limit=100";
 
-  Future<void> getDataForFeat3() async {
+  Future<List<Feature3>> getDataForFeat3() async {
     try {
       final uri = Uri.parse(link);
       final res = await http.get(uri);
 
       if (res.statusCode == 200) {
-        final jvals = jsonDecode(res.body);
+        final Map<String, dynamic> jvals = jsonDecode(res.body);
         final List<dynamic> data = jvals['data'];
-        final feat3Isolate = Isolate.spawn(_parseFeat3Data, []);
+
+        final receivePort = ReceivePort();
+
+        dynamic jklIsolate = await Isolate.spawn(_parseFeat3Data, {
+          'sendPort': receivePort.sendPort,
+          'data': data,
+        });
+
+        // Wait for parsed data
+        final result = await receivePort.first;
+        final List<Feature3> theData = List<Feature3>.from(result as List);
+
+        // // Print parsed results
+        // for (var item in theData) {
+        //   print("id is: ${item.id}");
+        //   print("title is: ${item.title}");
+        //   print("description is: ${item.description}");
+        // }
+        // print(theData);
+
+        jklIsolate.kill();
+
+        return theData;
       } else {
-        print("Failed: ${res.statusCode}");
+        throw Exception("HTTP Error: ${res.statusCode}, ${res.body}");
       }
     } catch (e) {
-      print("Error: $e");
+      throw Exception("Error in getDataForFeat3: ${e.toString()}");
     }
   }
 
-  static void _parseFeat3Data(List<dynamic> args) {
-    final SendPort sendPort = args[0];
-    final List<dynamic> decodedResponse = args[1];
+  // Isolate entry point
+  static void _parseFeat3Data(Map<String, dynamic> message) {
+    final SendPort sendPort = message['sendPort'];
+    final List<dynamic> decodedResponse = message['data'];
 
     try {
+      print(decodedResponse);
+      print(decodedResponse.length);
       final List<Feature3> feat3Data =
           decodedResponse.map((i) => Feature3.fromJson(i)).toList();
       sendPort.send(feat3Data);
     } catch (e) {
+      print(e.toString());
       sendPort.send([]);
     }
   }

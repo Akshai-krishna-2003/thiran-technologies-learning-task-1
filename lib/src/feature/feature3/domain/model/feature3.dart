@@ -9,10 +9,15 @@ class Feature3 {
 
   // Converting JSON to Feature3
   factory Feature3.fromJson(Map<String, dynamic> json) {
+    final dynamic rawId = json['id'];
+    final int parsedId =
+        (rawId is int) ? rawId : int.tryParse(rawId.toString()) ?? 0;
+
     return Feature3(
-        id: int.parse(json['id']),
-        title: json['title'].toString(),
-        description: json['description'].toString());
+      id: parsedId,
+      title: json['title']?.toString() ?? '',
+      description: json['description']?.toString() ?? '',
+    );
   }
 
   Map<String, dynamic> toJson() {
