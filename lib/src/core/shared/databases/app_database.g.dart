@@ -969,6 +969,277 @@ class Feature4TableCompanion extends UpdateCompanion<Feature4TableData> {
   }
 }
 
+class $Feature5TableTable extends Feature5Table
+    with TableInfo<$Feature5TableTable, Feature5TableData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $Feature5TableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _pngUrlMeta = const VerificationMeta('pngUrl');
+  @override
+  late final GeneratedColumn<String> pngUrl = GeneratedColumn<String>(
+      'png_url', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _svgUrlMeta = const VerificationMeta('svgUrl');
+  @override
+  late final GeneratedColumn<String> svgUrl = GeneratedColumn<String>(
+      'svg_url', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _descriptionMeta =
+      const VerificationMeta('description');
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+      'description', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [id, pngUrl, svgUrl, description];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'feature5_table';
+  @override
+  VerificationContext validateIntegrity(Insertable<Feature5TableData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('png_url')) {
+      context.handle(_pngUrlMeta,
+          pngUrl.isAcceptableOrUnknown(data['png_url']!, _pngUrlMeta));
+    }
+    if (data.containsKey('svg_url')) {
+      context.handle(_svgUrlMeta,
+          svgUrl.isAcceptableOrUnknown(data['svg_url']!, _svgUrlMeta));
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+          _descriptionMeta,
+          description.isAcceptableOrUnknown(
+              data['description']!, _descriptionMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Feature5TableData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Feature5TableData(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      pngUrl: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}png_url']),
+      svgUrl: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}svg_url']),
+      description: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}description']),
+    );
+  }
+
+  @override
+  $Feature5TableTable createAlias(String alias) {
+    return $Feature5TableTable(attachedDatabase, alias);
+  }
+}
+
+class Feature5TableData extends DataClass
+    implements Insertable<Feature5TableData> {
+  final String id;
+  final String? pngUrl;
+  final String? svgUrl;
+  final String? description;
+  const Feature5TableData(
+      {required this.id, this.pngUrl, this.svgUrl, this.description});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    if (!nullToAbsent || pngUrl != null) {
+      map['png_url'] = Variable<String>(pngUrl);
+    }
+    if (!nullToAbsent || svgUrl != null) {
+      map['svg_url'] = Variable<String>(svgUrl);
+    }
+    if (!nullToAbsent || description != null) {
+      map['description'] = Variable<String>(description);
+    }
+    return map;
+  }
+
+  Feature5TableCompanion toCompanion(bool nullToAbsent) {
+    return Feature5TableCompanion(
+      id: Value(id),
+      pngUrl:
+          pngUrl == null && nullToAbsent ? const Value.absent() : Value(pngUrl),
+      svgUrl:
+          svgUrl == null && nullToAbsent ? const Value.absent() : Value(svgUrl),
+      description: description == null && nullToAbsent
+          ? const Value.absent()
+          : Value(description),
+    );
+  }
+
+  factory Feature5TableData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Feature5TableData(
+      id: serializer.fromJson<String>(json['id']),
+      pngUrl: serializer.fromJson<String?>(json['pngUrl']),
+      svgUrl: serializer.fromJson<String?>(json['svgUrl']),
+      description: serializer.fromJson<String?>(json['description']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'pngUrl': serializer.toJson<String?>(pngUrl),
+      'svgUrl': serializer.toJson<String?>(svgUrl),
+      'description': serializer.toJson<String?>(description),
+    };
+  }
+
+  Feature5TableData copyWith(
+          {String? id,
+          Value<String?> pngUrl = const Value.absent(),
+          Value<String?> svgUrl = const Value.absent(),
+          Value<String?> description = const Value.absent()}) =>
+      Feature5TableData(
+        id: id ?? this.id,
+        pngUrl: pngUrl.present ? pngUrl.value : this.pngUrl,
+        svgUrl: svgUrl.present ? svgUrl.value : this.svgUrl,
+        description: description.present ? description.value : this.description,
+      );
+  Feature5TableData copyWithCompanion(Feature5TableCompanion data) {
+    return Feature5TableData(
+      id: data.id.present ? data.id.value : this.id,
+      pngUrl: data.pngUrl.present ? data.pngUrl.value : this.pngUrl,
+      svgUrl: data.svgUrl.present ? data.svgUrl.value : this.svgUrl,
+      description:
+          data.description.present ? data.description.value : this.description,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Feature5TableData(')
+          ..write('id: $id, ')
+          ..write('pngUrl: $pngUrl, ')
+          ..write('svgUrl: $svgUrl, ')
+          ..write('description: $description')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, pngUrl, svgUrl, description);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Feature5TableData &&
+          other.id == this.id &&
+          other.pngUrl == this.pngUrl &&
+          other.svgUrl == this.svgUrl &&
+          other.description == this.description);
+}
+
+class Feature5TableCompanion extends UpdateCompanion<Feature5TableData> {
+  final Value<String> id;
+  final Value<String?> pngUrl;
+  final Value<String?> svgUrl;
+  final Value<String?> description;
+  final Value<int> rowid;
+  const Feature5TableCompanion({
+    this.id = const Value.absent(),
+    this.pngUrl = const Value.absent(),
+    this.svgUrl = const Value.absent(),
+    this.description = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  Feature5TableCompanion.insert({
+    required String id,
+    this.pngUrl = const Value.absent(),
+    this.svgUrl = const Value.absent(),
+    this.description = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id);
+  static Insertable<Feature5TableData> custom({
+    Expression<String>? id,
+    Expression<String>? pngUrl,
+    Expression<String>? svgUrl,
+    Expression<String>? description,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (pngUrl != null) 'png_url': pngUrl,
+      if (svgUrl != null) 'svg_url': svgUrl,
+      if (description != null) 'description': description,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  Feature5TableCompanion copyWith(
+      {Value<String>? id,
+      Value<String?>? pngUrl,
+      Value<String?>? svgUrl,
+      Value<String?>? description,
+      Value<int>? rowid}) {
+    return Feature5TableCompanion(
+      id: id ?? this.id,
+      pngUrl: pngUrl ?? this.pngUrl,
+      svgUrl: svgUrl ?? this.svgUrl,
+      description: description ?? this.description,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (pngUrl.present) {
+      map['png_url'] = Variable<String>(pngUrl.value);
+    }
+    if (svgUrl.present) {
+      map['svg_url'] = Variable<String>(svgUrl.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Feature5TableCompanion(')
+          ..write('id: $id, ')
+          ..write('pngUrl: $pngUrl, ')
+          ..write('svgUrl: $svgUrl, ')
+          ..write('description: $description, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -976,16 +1247,18 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $Feature2TableTable feature2Table = $Feature2TableTable(this);
   late final $Feature3TableTable feature3Table = $Feature3TableTable(this);
   late final $Feature4TableTable feature4Table = $Feature4TableTable(this);
+  late final $Feature5TableTable feature5Table = $Feature5TableTable(this);
   late final NewsDao newsDao = NewsDao(this as AppDatabase);
   late final Feature2Dao feature2Dao = Feature2Dao(this as AppDatabase);
   late final Feature3Dao feature3Dao = Feature3Dao(this as AppDatabase);
   late final Feature4Dao feature4Dao = Feature4Dao(this as AppDatabase);
+  late final Feature5Dao feature5Dao = Feature5Dao(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [newsTable, feature2Table, feature3Table, feature4Table];
+      [newsTable, feature2Table, feature3Table, feature4Table, feature5Table];
 }
 
 typedef $$NewsTableTableCreateCompanionBuilder = NewsTableCompanion Function({
@@ -1570,6 +1843,164 @@ typedef $$Feature4TableTableProcessedTableManager = ProcessedTableManager<
     ),
     Feature4TableData,
     PrefetchHooks Function()>;
+typedef $$Feature5TableTableCreateCompanionBuilder = Feature5TableCompanion
+    Function({
+  required String id,
+  Value<String?> pngUrl,
+  Value<String?> svgUrl,
+  Value<String?> description,
+  Value<int> rowid,
+});
+typedef $$Feature5TableTableUpdateCompanionBuilder = Feature5TableCompanion
+    Function({
+  Value<String> id,
+  Value<String?> pngUrl,
+  Value<String?> svgUrl,
+  Value<String?> description,
+  Value<int> rowid,
+});
+
+class $$Feature5TableTableFilterComposer
+    extends Composer<_$AppDatabase, $Feature5TableTable> {
+  $$Feature5TableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get pngUrl => $composableBuilder(
+      column: $table.pngUrl, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get svgUrl => $composableBuilder(
+      column: $table.svgUrl, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => ColumnFilters(column));
+}
+
+class $$Feature5TableTableOrderingComposer
+    extends Composer<_$AppDatabase, $Feature5TableTable> {
+  $$Feature5TableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get pngUrl => $composableBuilder(
+      column: $table.pngUrl, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get svgUrl => $composableBuilder(
+      column: $table.svgUrl, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => ColumnOrderings(column));
+}
+
+class $$Feature5TableTableAnnotationComposer
+    extends Composer<_$AppDatabase, $Feature5TableTable> {
+  $$Feature5TableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get pngUrl =>
+      $composableBuilder(column: $table.pngUrl, builder: (column) => column);
+
+  GeneratedColumn<String> get svgUrl =>
+      $composableBuilder(column: $table.svgUrl, builder: (column) => column);
+
+  GeneratedColumn<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => column);
+}
+
+class $$Feature5TableTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $Feature5TableTable,
+    Feature5TableData,
+    $$Feature5TableTableFilterComposer,
+    $$Feature5TableTableOrderingComposer,
+    $$Feature5TableTableAnnotationComposer,
+    $$Feature5TableTableCreateCompanionBuilder,
+    $$Feature5TableTableUpdateCompanionBuilder,
+    (
+      Feature5TableData,
+      BaseReferences<_$AppDatabase, $Feature5TableTable, Feature5TableData>
+    ),
+    Feature5TableData,
+    PrefetchHooks Function()> {
+  $$Feature5TableTableTableManager(_$AppDatabase db, $Feature5TableTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$Feature5TableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$Feature5TableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$Feature5TableTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<String> id = const Value.absent(),
+            Value<String?> pngUrl = const Value.absent(),
+            Value<String?> svgUrl = const Value.absent(),
+            Value<String?> description = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              Feature5TableCompanion(
+            id: id,
+            pngUrl: pngUrl,
+            svgUrl: svgUrl,
+            description: description,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            required String id,
+            Value<String?> pngUrl = const Value.absent(),
+            Value<String?> svgUrl = const Value.absent(),
+            Value<String?> description = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              Feature5TableCompanion.insert(
+            id: id,
+            pngUrl: pngUrl,
+            svgUrl: svgUrl,
+            description: description,
+            rowid: rowid,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$Feature5TableTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $Feature5TableTable,
+    Feature5TableData,
+    $$Feature5TableTableFilterComposer,
+    $$Feature5TableTableOrderingComposer,
+    $$Feature5TableTableAnnotationComposer,
+    $$Feature5TableTableCreateCompanionBuilder,
+    $$Feature5TableTableUpdateCompanionBuilder,
+    (
+      Feature5TableData,
+      BaseReferences<_$AppDatabase, $Feature5TableTable, Feature5TableData>
+    ),
+    Feature5TableData,
+    PrefetchHooks Function()>;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -1582,4 +2013,6 @@ class $AppDatabaseManager {
       $$Feature3TableTableTableManager(_db, _db.feature3Table);
   $$Feature4TableTableTableManager get feature4Table =>
       $$Feature4TableTableTableManager(_db, _db.feature4Table);
+  $$Feature5TableTableTableManager get feature5Table =>
+      $$Feature5TableTableTableManager(_db, _db.feature5Table);
 }

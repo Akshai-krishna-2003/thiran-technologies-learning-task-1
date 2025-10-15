@@ -5,7 +5,7 @@ import 'package:practiceapp/src/feature/news/presentation/screens/home_screen.da
 import 'package:practiceapp/src/feature/feature4/presentation/screens/page4_screen.dart';
 import 'package:practiceapp/src/feature/feature3/presentation/screens/page3_screen.dart';
 import 'package:practiceapp/src/feature/feature2/presentation/screens/page2_screen.dart';
-import 'package:practiceapp/src/othertasks/page5_screen.dart';
+import 'package:practiceapp/src/feature/feature5/presentation/screens/page5_screen.dart';
 
 final router = GoRouter(
   initialLocation: '/home',
