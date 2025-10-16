@@ -60,6 +60,7 @@ void _insertFunctionVal(List<dynamic> args) async {
               pngUrl: Value(a.pngUrl),
               svgUrl: Value(a.svgUrl),
               description: Value(a.description),
+              downloadedPath: Value(a.downloadedPath),
             ),
           )
           .toList(),

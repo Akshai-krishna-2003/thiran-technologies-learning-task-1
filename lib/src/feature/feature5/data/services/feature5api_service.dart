@@ -1,7 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:isolate';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
+import 'package:practiceapp/src/app/global_items.dart';
 import 'package:practiceapp/src/feature/feature5/domain/model/feature5.dart';
+import 'package:path/path.dart' as p;
 
 class Feature5Api {
   final String link = "https://restcountries.com/v3.1/all?fields=flags";
@@ -19,6 +24,7 @@ class Feature5Api {
         final isolate = await Isolate.spawn(_parseFeat5Data, {
           'sendPort': receivePort.sendPort,
           'data': data,
+          'rootIsolateToken': rootIsolateToken
         });
 
         // Wait for parsed data
@@ -29,7 +35,7 @@ class Feature5Api {
 
         print("Total flags fetched: ${theData.length}");
         for (var item in theData.take(5)) {
-          print("🇺🇳 PNG: ${item.pngUrl}");
+          print("PNG: ${item.pngUrl}");
           print("SVG: ${item.svgUrl}");
           print("ALT: ${item.description}");
         }
@@ -44,16 +50,54 @@ class Feature5Api {
   }
 
   // Isolate entry point for parsing
-  static void _parseFeat5Data(Map<String, dynamic> message) {
+  static void _parseFeat5Data(Map<String, dynamic> message) async {
     final SendPort sendPort = message['sendPort'];
     final List<dynamic> decodedResponse = message['data'];
+    final RootIsolateToken? rit = message['rootIsolateToken'];
+    final List<Feature5> feat5Data = [];
+
+    if (rit != null) {
+      BackgroundIsolateBinaryMessenger.ensureInitialized(rit);
+    }
 
     try {
-      final List<Feature5> feat5Data =
-          decodedResponse.map((i) => Feature5.fromJson(i)).toList();
+      final dir = await getApplicationDocumentsDirectory();
+
+      for (final i in decodedResponse) {
+        final flags = i['flags'];
+        if (flags == null) continue;
+
+        final pngUrl = flags['png']?.toString() ?? '';
+        final svgUrl = flags['svg']?.toString() ?? '';
+        final desc = flags['alt']?.toString() ?? 'No description available';
+
+        // Download and store image locally
+        String localPath = '';
+        if (pngUrl.isNotEmpty) {
+          try {
+            final download = await http.get(Uri.parse(pngUrl));
+            final filePath = p.join(dir.path, p.basename(pngUrl));
+            final file = File(filePath);
+            await file.writeAsBytes(download.bodyBytes);
+            localPath = file.path;
+          } catch (e) {
+            print("Image download failed for $pngUrl: $e");
+          }
+        }
+
+        feat5Data.add(Feature5(
+          id: svgUrl, 
+          pngUrl: pngUrl,
+          svgUrl: svgUrl,
+          description: desc,
+          downloadedPath: localPath,
+        ));
+      }
+
+      print("Parsed ${feat5Data.length} flags successfully");
       sendPort.send(feat5Data);
-    } catch (e) {
-      print("Parsing error: $e");
+    } catch (e, st) {
+      print("Parsing error: $e\n$st");
       sendPort.send([]);
     }
   }

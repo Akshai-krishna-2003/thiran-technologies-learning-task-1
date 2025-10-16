@@ -49,6 +49,7 @@ class PaginatedFeat5Notifier extends StateNotifier<AsyncValue<List<Feature5>>> {
                 pngUrl: r.pngUrl ?? '',
                 svgUrl: r.svgUrl ?? '',
                 description: r.description ?? '',
+                downloadedPath: r.downloadedPath ?? '',
               ))
           .toList();
 

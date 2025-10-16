@@ -996,8 +996,15 @@ class $Feature5TableTable extends Feature5Table
   late final GeneratedColumn<String> description = GeneratedColumn<String>(
       'description', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _downloadedPathMeta =
+      const VerificationMeta('downloadedPath');
   @override
-  List<GeneratedColumn> get $columns => [id, pngUrl, svgUrl, description];
+  late final GeneratedColumn<String> downloadedPath = GeneratedColumn<String>(
+      'downloaded_path', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, pngUrl, svgUrl, description, downloadedPath];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -1027,6 +1034,12 @@ class $Feature5TableTable extends Feature5Table
           description.isAcceptableOrUnknown(
               data['description']!, _descriptionMeta));
     }
+    if (data.containsKey('downloaded_path')) {
+      context.handle(
+          _downloadedPathMeta,
+          downloadedPath.isAcceptableOrUnknown(
+              data['downloaded_path']!, _downloadedPathMeta));
+    }
     return context;
   }
 
@@ -1044,6 +1057,8 @@ class $Feature5TableTable extends Feature5Table
           .read(DriftSqlType.string, data['${effectivePrefix}svg_url']),
       description: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}description']),
+      downloadedPath: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}downloaded_path']),
     );
   }
 
@@ -1059,8 +1074,13 @@ class Feature5TableData extends DataClass
   final String? pngUrl;
   final String? svgUrl;
   final String? description;
+  final String? downloadedPath;
   const Feature5TableData(
-      {required this.id, this.pngUrl, this.svgUrl, this.description});
+      {required this.id,
+      this.pngUrl,
+      this.svgUrl,
+      this.description,
+      this.downloadedPath});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -1073,6 +1093,9 @@ class Feature5TableData extends DataClass
     }
     if (!nullToAbsent || description != null) {
       map['description'] = Variable<String>(description);
+    }
+    if (!nullToAbsent || downloadedPath != null) {
+      map['downloaded_path'] = Variable<String>(downloadedPath);
     }
     return map;
   }
@@ -1087,6 +1110,9 @@ class Feature5TableData extends DataClass
       description: description == null && nullToAbsent
           ? const Value.absent()
           : Value(description),
+      downloadedPath: downloadedPath == null && nullToAbsent
+          ? const Value.absent()
+          : Value(downloadedPath),
     );
   }
 
@@ -1098,6 +1124,7 @@ class Feature5TableData extends DataClass
       pngUrl: serializer.fromJson<String?>(json['pngUrl']),
       svgUrl: serializer.fromJson<String?>(json['svgUrl']),
       description: serializer.fromJson<String?>(json['description']),
+      downloadedPath: serializer.fromJson<String?>(json['downloadedPath']),
     );
   }
   @override
@@ -1108,6 +1135,7 @@ class Feature5TableData extends DataClass
       'pngUrl': serializer.toJson<String?>(pngUrl),
       'svgUrl': serializer.toJson<String?>(svgUrl),
       'description': serializer.toJson<String?>(description),
+      'downloadedPath': serializer.toJson<String?>(downloadedPath),
     };
   }
 
@@ -1115,12 +1143,15 @@ class Feature5TableData extends DataClass
           {String? id,
           Value<String?> pngUrl = const Value.absent(),
           Value<String?> svgUrl = const Value.absent(),
-          Value<String?> description = const Value.absent()}) =>
+          Value<String?> description = const Value.absent(),
+          Value<String?> downloadedPath = const Value.absent()}) =>
       Feature5TableData(
         id: id ?? this.id,
         pngUrl: pngUrl.present ? pngUrl.value : this.pngUrl,
         svgUrl: svgUrl.present ? svgUrl.value : this.svgUrl,
         description: description.present ? description.value : this.description,
+        downloadedPath:
+            downloadedPath.present ? downloadedPath.value : this.downloadedPath,
       );
   Feature5TableData copyWithCompanion(Feature5TableCompanion data) {
     return Feature5TableData(
@@ -1129,6 +1160,9 @@ class Feature5TableData extends DataClass
       svgUrl: data.svgUrl.present ? data.svgUrl.value : this.svgUrl,
       description:
           data.description.present ? data.description.value : this.description,
+      downloadedPath: data.downloadedPath.present
+          ? data.downloadedPath.value
+          : this.downloadedPath,
     );
   }
 
@@ -1138,13 +1172,15 @@ class Feature5TableData extends DataClass
           ..write('id: $id, ')
           ..write('pngUrl: $pngUrl, ')
           ..write('svgUrl: $svgUrl, ')
-          ..write('description: $description')
+          ..write('description: $description, ')
+          ..write('downloadedPath: $downloadedPath')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, pngUrl, svgUrl, description);
+  int get hashCode =>
+      Object.hash(id, pngUrl, svgUrl, description, downloadedPath);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1152,7 +1188,8 @@ class Feature5TableData extends DataClass
           other.id == this.id &&
           other.pngUrl == this.pngUrl &&
           other.svgUrl == this.svgUrl &&
-          other.description == this.description);
+          other.description == this.description &&
+          other.downloadedPath == this.downloadedPath);
 }
 
 class Feature5TableCompanion extends UpdateCompanion<Feature5TableData> {
@@ -1160,12 +1197,14 @@ class Feature5TableCompanion extends UpdateCompanion<Feature5TableData> {
   final Value<String?> pngUrl;
   final Value<String?> svgUrl;
   final Value<String?> description;
+  final Value<String?> downloadedPath;
   final Value<int> rowid;
   const Feature5TableCompanion({
     this.id = const Value.absent(),
     this.pngUrl = const Value.absent(),
     this.svgUrl = const Value.absent(),
     this.description = const Value.absent(),
+    this.downloadedPath = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   Feature5TableCompanion.insert({
@@ -1173,6 +1212,7 @@ class Feature5TableCompanion extends UpdateCompanion<Feature5TableData> {
     this.pngUrl = const Value.absent(),
     this.svgUrl = const Value.absent(),
     this.description = const Value.absent(),
+    this.downloadedPath = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id);
   static Insertable<Feature5TableData> custom({
@@ -1180,6 +1220,7 @@ class Feature5TableCompanion extends UpdateCompanion<Feature5TableData> {
     Expression<String>? pngUrl,
     Expression<String>? svgUrl,
     Expression<String>? description,
+    Expression<String>? downloadedPath,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -1187,6 +1228,7 @@ class Feature5TableCompanion extends UpdateCompanion<Feature5TableData> {
       if (pngUrl != null) 'png_url': pngUrl,
       if (svgUrl != null) 'svg_url': svgUrl,
       if (description != null) 'description': description,
+      if (downloadedPath != null) 'downloaded_path': downloadedPath,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -1196,12 +1238,14 @@ class Feature5TableCompanion extends UpdateCompanion<Feature5TableData> {
       Value<String?>? pngUrl,
       Value<String?>? svgUrl,
       Value<String?>? description,
+      Value<String?>? downloadedPath,
       Value<int>? rowid}) {
     return Feature5TableCompanion(
       id: id ?? this.id,
       pngUrl: pngUrl ?? this.pngUrl,
       svgUrl: svgUrl ?? this.svgUrl,
       description: description ?? this.description,
+      downloadedPath: downloadedPath ?? this.downloadedPath,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -1221,6 +1265,9 @@ class Feature5TableCompanion extends UpdateCompanion<Feature5TableData> {
     if (description.present) {
       map['description'] = Variable<String>(description.value);
     }
+    if (downloadedPath.present) {
+      map['downloaded_path'] = Variable<String>(downloadedPath.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -1234,6 +1281,7 @@ class Feature5TableCompanion extends UpdateCompanion<Feature5TableData> {
           ..write('pngUrl: $pngUrl, ')
           ..write('svgUrl: $svgUrl, ')
           ..write('description: $description, ')
+          ..write('downloadedPath: $downloadedPath, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -1849,6 +1897,7 @@ typedef $$Feature5TableTableCreateCompanionBuilder = Feature5TableCompanion
   Value<String?> pngUrl,
   Value<String?> svgUrl,
   Value<String?> description,
+  Value<String?> downloadedPath,
   Value<int> rowid,
 });
 typedef $$Feature5TableTableUpdateCompanionBuilder = Feature5TableCompanion
@@ -1857,6 +1906,7 @@ typedef $$Feature5TableTableUpdateCompanionBuilder = Feature5TableCompanion
   Value<String?> pngUrl,
   Value<String?> svgUrl,
   Value<String?> description,
+  Value<String?> downloadedPath,
   Value<int> rowid,
 });
 
@@ -1880,6 +1930,10 @@ class $$Feature5TableTableFilterComposer
 
   ColumnFilters<String> get description => $composableBuilder(
       column: $table.description, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get downloadedPath => $composableBuilder(
+      column: $table.downloadedPath,
+      builder: (column) => ColumnFilters(column));
 }
 
 class $$Feature5TableTableOrderingComposer
@@ -1902,6 +1956,10 @@ class $$Feature5TableTableOrderingComposer
 
   ColumnOrderings<String> get description => $composableBuilder(
       column: $table.description, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get downloadedPath => $composableBuilder(
+      column: $table.downloadedPath,
+      builder: (column) => ColumnOrderings(column));
 }
 
 class $$Feature5TableTableAnnotationComposer
@@ -1924,6 +1982,9 @@ class $$Feature5TableTableAnnotationComposer
 
   GeneratedColumn<String> get description => $composableBuilder(
       column: $table.description, builder: (column) => column);
+
+  GeneratedColumn<String> get downloadedPath => $composableBuilder(
+      column: $table.downloadedPath, builder: (column) => column);
 }
 
 class $$Feature5TableTableTableManager extends RootTableManager<
@@ -1956,6 +2017,7 @@ class $$Feature5TableTableTableManager extends RootTableManager<
             Value<String?> pngUrl = const Value.absent(),
             Value<String?> svgUrl = const Value.absent(),
             Value<String?> description = const Value.absent(),
+            Value<String?> downloadedPath = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               Feature5TableCompanion(
@@ -1963,6 +2025,7 @@ class $$Feature5TableTableTableManager extends RootTableManager<
             pngUrl: pngUrl,
             svgUrl: svgUrl,
             description: description,
+            downloadedPath: downloadedPath,
             rowid: rowid,
           ),
           createCompanionCallback: ({
@@ -1970,6 +2033,7 @@ class $$Feature5TableTableTableManager extends RootTableManager<
             Value<String?> pngUrl = const Value.absent(),
             Value<String?> svgUrl = const Value.absent(),
             Value<String?> description = const Value.absent(),
+            Value<String?> downloadedPath = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               Feature5TableCompanion.insert(
@@ -1977,6 +2041,7 @@ class $$Feature5TableTableTableManager extends RootTableManager<
             pngUrl: pngUrl,
             svgUrl: svgUrl,
             description: description,
+            downloadedPath: downloadedPath,
             rowid: rowid,
           ),
           withReferenceMapper: (p0) => p0

@@ -85,7 +85,7 @@ class _Page5ScreenState extends ConsumerState<Page5Screen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           // Flag Image
-                          if (flag.pngUrl.isNotEmpty)
+                          if (flag.downloadedPath.isNotEmpty)
                             ClipRRect(
                               borderRadius: BorderRadius.circular(10),
                               child: Image.network(
