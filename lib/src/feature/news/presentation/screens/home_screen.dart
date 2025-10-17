@@ -10,6 +10,14 @@ class HomeScreen extends ConsumerStatefulWidget {
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
+enum MenuItems {
+  none,
+  titleAsc,
+  titleDesc,
+  descriptionAsc,
+  descriptionDesc,
+}
+
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   final ScrollController _scrollController = ScrollController();
 
@@ -60,6 +68,27 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ref.read(paginatedArticlesProvider.notifier).refresh();
             },
           ),
+          PopupMenuButton<SortOption>(
+            onSelected: (SortOption option) {
+              ref.read(selectedSortProvider.notifier).state = option;
+
+              ref
+                  .read(paginatedArticlesProvider.notifier)
+                  .refresh(newSort: option);
+            },
+            itemBuilder: (_) => const [
+              PopupMenuItem(
+                  value: SortOption.titleAsc, child: Text('Title asc')),
+              PopupMenuItem(
+                  value: SortOption.titleDesc, child: Text('Title desc')),
+              PopupMenuItem(
+                  value: SortOption.descriptionAsc,
+                  child: Text('Description asc')),
+              PopupMenuItem(
+                  value: SortOption.descriptionDesc,
+                  child: Text('Description desc')),
+            ],
+          )
         ],
       ),
       body: syncState.when(

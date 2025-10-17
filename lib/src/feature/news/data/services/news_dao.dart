@@ -35,9 +35,58 @@ class NewsDao extends DatabaseAccessor<AppDatabase> with _$NewsDaoMixin {
 
   /// Paginated fetch
   Future<List<NewsTableData>> getArticlesPage(int offset, int limit) async {
+    return await (select(newsTable)..limit(limit, offset: offset)).get();
+  }
+
+  /// Paginated sorted articles --> This function will be invoked when I click the button for title
+  Future<List<NewsTableData>> getSortedPaginatedForTitle(
+      int offset, int limit) async {
     return await (select(newsTable)
           ..limit(limit, offset: offset)
-          ..orderBy([(tbl) => OrderingTerm.asc(tbl.author)]))
+          ..orderBy([(tbl) => OrderingTerm.asc(tbl.title)]))
+        .get();
+  }
+
+  /// Paginated sorted articles --> Same but only for description
+  Future<List<NewsTableData>> getSortedPaginatedForDescription(
+      int offset, int limit) async {
+    return await (select(newsTable)
+          ..limit(limit, offset: offset)
+          ..orderBy([(tbl) => OrderingTerm.asc(tbl.description)]))
+        .get();
+  }
+
+  Future<List<NewsTableData>> getSortedPaginated(
+    String column, {
+    required bool ascending,
+    required int offset,
+    required int limit,
+  }) async {
+    List<OrderClauseGenerator<NewsTable>> orderByClause;
+
+    switch (column) {
+      case 'title':
+        orderByClause = [
+          (tbl) => ascending
+              ? OrderingTerm.asc(tbl.title.collate(Collate.noCase))
+              : OrderingTerm.desc(tbl.title.collate(Collate.noCase))
+        ];
+        break;
+      case 'description':
+        orderByClause = [
+          (tbl) => ascending
+              ? OrderingTerm.asc(tbl.description.collate(Collate.noCase))
+              : OrderingTerm.desc(tbl.description.collate(Collate.noCase))
+        ];
+        break;
+
+      default:
+        orderByClause = [(tbl) => OrderingTerm.asc(tbl.id)];
+    }
+
+    return await (select(newsTable)
+          ..limit(limit, offset: offset)
+          ..orderBy(orderByClause))
         .get();
   }
 

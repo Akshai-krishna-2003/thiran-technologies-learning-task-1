@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:practiceapp/src/app/global_items.dart';
+import 'package:practiceapp/src/core/shared/databases/app_database.dart';
 import '../../../news/data/services/news_dao.dart';
 import 'package:practiceapp/src/feature/news/data/services/news_service.dart';
 import 'package:practiceapp/src/feature/news/domain/model/news.dart';
@@ -11,8 +12,20 @@ final newsDaoProvider = Provider<NewsDao>((ref) {
   return db.newsDao;
 });
 
+enum SortOption {
+  none,
+  titleAsc,
+  titleDesc,
+  descriptionAsc,
+  descriptionDesc,
+}
+
 /// API service provider
 final newsServiceProvider = Provider<NewsService>((ref) => NewsService());
+
+/// Sort option selector
+final selectedSortProvider =
+    StateProvider<SortOption>((ref) => SortOption.none);
 
 /// Sync provider — Fetch from API → Insert into Drift
 final syncArticlesProvider = FutureProvider<void>((ref) async {
@@ -36,13 +49,14 @@ final syncArticlesProvider = FutureProvider<void>((ref) async {
 
 /// Paginated provider — reads from Drift DB
 class PaginatedArticlesNotifier extends StateNotifier<AsyncValue<List<News>>> {
-  
   final NewsDao newsDao;
   int _offset = 0;
   final int _limit = 10;
   bool _isFetching = false;
+  SortOption sortOption;
 
-  PaginatedArticlesNotifier(this.newsDao) : super(const AsyncValue.loading()) {
+  PaginatedArticlesNotifier(this.newsDao, {required this.sortOption})
+      : super(const AsyncValue.loading()) {
     loadMore();
   }
 
@@ -51,7 +65,30 @@ class PaginatedArticlesNotifier extends StateNotifier<AsyncValue<List<News>>> {
     _isFetching = true;
 
     try {
-      final rows = await newsDao.getArticlesPage(_offset, _limit);
+      List<NewsTableData> rows;
+
+      //  Pick DAO query depending on sort option
+      switch (sortOption) {
+        case SortOption.titleAsc:
+          rows = await newsDao.getSortedPaginated('title',
+              ascending: true, offset: _offset, limit: _limit);
+          break;
+        case SortOption.titleDesc:
+          rows = await newsDao.getSortedPaginated('title',
+              ascending: false, offset: _offset, limit: _limit);
+          break;
+        case SortOption.descriptionAsc:
+          rows = await newsDao.getSortedPaginated('description',
+              ascending: true, offset: _offset, limit: _limit);
+          break;
+        case SortOption.descriptionDesc:
+          rows = await newsDao.getSortedPaginated('description',
+              ascending: false, offset: _offset, limit: _limit);
+          break;
+        default:
+          rows = await newsDao.getArticlesPage(_offset, _limit);
+      }
+
       final page = rows
           .map((r) => News(
                 author: r.author ?? '',
@@ -74,18 +111,19 @@ class PaginatedArticlesNotifier extends StateNotifier<AsyncValue<List<News>>> {
     }
   }
 
-  Future<void> refresh() async {
+  Future<void> refresh({SortOption? newSort}) async {
     _offset = 0;
+    if (newSort != null) sortOption = newSort;
     state = const AsyncValue.loading();
     await loadMore();
   }
 }
 
 final paginatedArticlesProvider =
-  
-    StateNotifierProvider<PaginatedArticlesNotifier, AsyncValue<List<News>>> (
+    StateNotifierProvider<PaginatedArticlesNotifier, AsyncValue<List<News>>>(
   (ref) {
     final dao = ref.watch(newsDaoProvider);
-    return PaginatedArticlesNotifier(dao);
+    final sortOption = ref.watch(selectedSortProvider);
+    return PaginatedArticlesNotifier(dao, sortOption: sortOption);
   },
 );
