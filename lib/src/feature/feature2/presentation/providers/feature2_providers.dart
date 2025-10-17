@@ -19,6 +19,12 @@ final syncFeat2Provider = FutureProvider<void>((ref) async {
   final feat2Service = ref.watch(feat2ApiProvider);
   final feat2Dao = ref.watch(feature2DaoProvider);
 
+  final localArticles = await feat2Dao.getArticlesPage(0, 1);
+
+  if (localArticles.isNotEmpty) {
+    return;
+  }
+
   // get the List<Feature2> from api
   final valuesFromFeat2Api = await feat2Service.getFromApi();
 

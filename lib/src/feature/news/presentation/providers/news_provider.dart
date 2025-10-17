@@ -19,6 +19,12 @@ final syncArticlesProvider = FutureProvider<void>((ref) async {
   final newsService = ref.watch(newsServiceProvider);
   final newsDao = ref.watch(newsDaoProvider);
 
+  final localArticles = await newsDao.getArticlesPage(0, 1);
+
+  if (localArticles.isNotEmpty) {
+    return;
+  }
+
   // 1. Fetch from API (no DB logic in service)
   final fetchedArticles = await newsService.fetchArticles();
 
