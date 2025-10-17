@@ -78,6 +78,7 @@ class Feature5Api {
             final download = await http.get(Uri.parse(pngUrl));
             final filePath = p.join(dir.path, p.basename(pngUrl));
             final file = File(filePath);
+            print("The file path is: ${file.path}");
             await file.writeAsBytes(download.bodyBytes);
             localPath = file.path;
           } catch (e) {
@@ -86,7 +87,7 @@ class Feature5Api {
         }
 
         feat5Data.add(Feature5(
-          id: svgUrl, 
+          id: svgUrl,
           pngUrl: pngUrl,
           svgUrl: svgUrl,
           description: desc,

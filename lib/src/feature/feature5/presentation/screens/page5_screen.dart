@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:practiceapp/src/feature/feature5/domain/model/feature5.dart';
@@ -88,8 +90,8 @@ class _Page5ScreenState extends ConsumerState<Page5Screen> {
                           if (flag.downloadedPath.isNotEmpty)
                             ClipRRect(
                               borderRadius: BorderRadius.circular(10),
-                              child: Image.network(
-                                flag.pngUrl,
+                              child: Image.file(
+                                File(flag.downloadedPath),
                                 height: 150,
                                 width: double.infinity,
                                 fit: BoxFit.cover,
