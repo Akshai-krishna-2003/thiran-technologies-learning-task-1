@@ -17,6 +17,11 @@ class _Page2ScreenState extends ConsumerState<Page2Screen> {
   void initState() {
     super.initState();
 
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await ref.read(syncFeat2Provider.future);
+      await ref.read(paginatedFeat2Provider.notifier).refresh();
+    });
+
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >=
           _scrollController.position.maxScrollExtent - 100) {

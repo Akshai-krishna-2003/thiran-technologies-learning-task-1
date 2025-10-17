@@ -17,11 +17,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   void initState() {
     super.initState();
 
+    // Run sync first, then refresh articles after it completes -- LETS TRY
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await ref.read(syncArticlesProvider.future);
+      await ref.read(paginatedArticlesProvider.notifier).refresh();
+    });
+
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >=
           _scrollController.position.maxScrollExtent - 100) {
         ref.read(paginatedArticlesProvider.notifier).loadMore();
-        print("");
       }
     });
   }

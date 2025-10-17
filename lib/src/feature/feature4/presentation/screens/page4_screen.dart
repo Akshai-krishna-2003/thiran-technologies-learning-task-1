@@ -17,6 +17,11 @@ class _Page4ScreenState extends ConsumerState<Page4Screen> {
   void initState() {
     super.initState();
 
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await ref.read(syncFeat4Provider.future);
+      await ref.read(paginatedFeat4Provider.notifier).refresh();
+    });
+
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >=
           _scrollController.position.maxScrollExtent - 100) {

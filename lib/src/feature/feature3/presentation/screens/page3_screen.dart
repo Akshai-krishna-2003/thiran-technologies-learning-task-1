@@ -18,6 +18,11 @@ class _Page3ScreenState extends ConsumerState<Page3Screen> {
   void initState() {
     super.initState();
 
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await ref.read(syncFeat3Provider.future);
+      await ref.read(paginatedFeat3Provider.notifier).refresh();
+    });
+
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >=
           _scrollController.position.maxScrollExtent - 100) {

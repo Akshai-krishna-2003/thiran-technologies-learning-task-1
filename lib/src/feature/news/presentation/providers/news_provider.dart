@@ -36,6 +36,7 @@ final syncArticlesProvider = FutureProvider<void>((ref) async {
 
 /// Paginated provider — reads from Drift DB
 class PaginatedArticlesNotifier extends StateNotifier<AsyncValue<List<News>>> {
+  
   final NewsDao newsDao;
   int _offset = 0;
   final int _limit = 10;
@@ -81,7 +82,8 @@ class PaginatedArticlesNotifier extends StateNotifier<AsyncValue<List<News>>> {
 }
 
 final paginatedArticlesProvider =
-    StateNotifierProvider<PaginatedArticlesNotifier, AsyncValue<List<News>>>(
+  
+    StateNotifierProvider<PaginatedArticlesNotifier, AsyncValue<List<News>>> (
   (ref) {
     final dao = ref.watch(newsDaoProvider);
     return PaginatedArticlesNotifier(dao);

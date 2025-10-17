@@ -19,6 +19,11 @@ class _Page5ScreenState extends ConsumerState<Page5Screen> {
   void initState() {
     super.initState();
 
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await ref.read(syncFeat5Provider.future);
+      await ref.read(paginatedFeat5Provider.notifier).refresh();
+    });
+
     // Trigger load more when reaching end of list
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >=
