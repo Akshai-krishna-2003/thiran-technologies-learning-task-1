@@ -119,6 +119,43 @@ class PaginatedArticlesNotifier extends StateNotifier<AsyncValue<List<News>>> {
   }
 }
 
+class SearchNotifier extends StateNotifier<AsyncValue<List<News>>> {
+  final NewsDao newsDao;
+  String lastQuery = "";
+
+  SearchNotifier(this.newsDao) : super(const AsyncValue.data([]));
+
+  Future<void> search(String query) async {
+    lastQuery = query;
+    if (query.isEmpty) {
+      state = const AsyncValue.data([]);
+      return;
+    }
+
+    state = const AsyncValue.loading();
+
+    try {
+      final rows = await newsDao.getSearchArticleTitle(query);
+      final results = rows
+          .map((r) => News(
+                author: r.author ?? '',
+                title: r.title ?? '',
+                description: r.description ?? '',
+              ))
+          .toList();
+
+      state = AsyncValue.data(results);
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+    }
+  }
+
+  void reset() {
+    lastQuery = "";
+    state = const AsyncValue.data([]);
+  }
+}
+
 final paginatedArticlesProvider =
     StateNotifierProvider<PaginatedArticlesNotifier, AsyncValue<List<News>>>(
   (ref) {
@@ -127,3 +164,9 @@ final paginatedArticlesProvider =
     return PaginatedArticlesNotifier(dao, sortOption: sortOption);
   },
 );
+
+final searchProvider =
+    StateNotifierProvider<SearchNotifier, AsyncValue<List<News>>>((ref) {
+  final dao = ref.watch(newsDaoProvider);
+  return SearchNotifier(dao);
+});

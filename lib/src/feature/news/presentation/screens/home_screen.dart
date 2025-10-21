@@ -49,6 +49,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget build(BuildContext context) {
     final syncState = ref.watch(syncArticlesProvider);
     final asyncArticles = ref.watch(paginatedArticlesProvider);
+    final sResults = ref.watch(searchProvider);
 
     return Scaffold(
         appBar: AppBar(
@@ -94,19 +95,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         body: Column(children: [
           Padding(
             padding: const EdgeInsets.all(12.0),
-            child: SearchAnchor(
-              builder: (context, controller) {
-                return SearchBar(
-                  controller: controller,
-                  hintText: "Search here",
-                  leading: const Icon(Icons.search),
-                  onChanged: (_) {
-                    // will implement later
-                  },
-                );
-              },
-              suggestionsBuilder: (context, controller) {
-                return [];
+            child: SearchBar(
+              hintText: "Search here",
+              leading: const Icon(Icons.search),
+              onChanged: (value) {
+                ref.read(searchProvider.notifier).search(value);
+                if (value.isEmpty) {
+                  ref.read(searchProvider.notifier).reset();
+                }
               },
             ),
           ),
@@ -115,59 +111,86 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (err, _) => Center(child: Text("Sync error: $err")),
               data: (_) {
-                return asyncArticles.when(
-                  data: (articles) {
-                    if (articles.isEmpty) {
-                      return const Center(child: Text("No articles found"));
-                    }
-                    print("Length is: ${articles.length}");
-                    return ListView.builder(
-                      controller: _scrollController,
-                      itemCount: articles.length,
-                      itemBuilder: (context, index) {
-                        final News article = articles[index];
-                        return Card(
-                          margin: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 8),
-                          elevation: 3,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  article.title.isNotEmpty
-                                      ? article.title
-                                      : 'No Title',
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  article.description.isNotEmpty
-                                      ? article.description
-                                      : 'No Description',
-                                  style: const TextStyle(fontSize: 14),
-                                ),
-                              ],
-                            ),
+                final searchState = ref.watch(searchProvider);
+                final searchNotifier = ref.read(searchProvider.notifier);
+                final hasSearch = searchNotifier.lastQuery.isNotEmpty;
+
+                return searchState.when(
+                  data: (searchResults) {
+                    if (hasSearch) {
+                      if (searchResults.isEmpty) {
+                        return const Center(
+                          child: Text(
+                            "No results found",
+                            style: TextStyle(color: Colors.blue, fontSize: 20),
                           ),
                         );
-                      },
-                    );
+                      } else {
+                        return _buildArticleList(searchResults);
+                      }
+                    } else {
+              
+                      return asyncArticles.when(
+                        data: (articles) {
+                          if (articles.isEmpty) {
+                            return const Center(
+                                child: Text("No articles found"));
+                          }
+                          return _buildArticleList(articles);
+                        },
+                        loading: () =>
+                            const Center(child: CircularProgressIndicator()),
+                        error: (err, _) =>
+                            Center(child: Text("DB error: $err")),
+                      );
+                    }
                   },
                   loading: () =>
                       const Center(child: CircularProgressIndicator()),
-                  error: (err, _) => Center(child: Text("DB error: $err")),
+                  error: (err, _) => Center(child: Text("Search error: $err")),
                 );
               },
             ),
-          )
+          ),
         ]));
+  }
+
+  Widget _buildArticleList(List<News> articles) {
+    return ListView.builder(
+      controller: _scrollController,
+      itemCount: articles.length,
+      itemBuilder: (context, index) {
+        final article = articles[index];
+        return Card(
+          margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          elevation: 3,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  article.title.isNotEmpty ? article.title : 'No Title',
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  article.description.isNotEmpty
+                      ? article.description
+                      : 'No Description',
+                  style: const TextStyle(fontSize: 14),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }

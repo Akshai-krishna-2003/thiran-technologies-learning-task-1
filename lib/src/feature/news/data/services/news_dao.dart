@@ -94,6 +94,18 @@ class NewsDao extends DatabaseAccessor<AppDatabase> with _$NewsDaoMixin {
   Future<void> clearAll() async {
     await delete(newsTable).go();
   }
+
+  /// Searching data inside the database for title
+  Future<List<NewsTableData>> getSearchArticleTitle(String sTitle) async {
+    final abcd = await (select(newsTable)
+          ..where((u) => u.title.collate(Collate.noCase).like("%$sTitle%")))
+        .get();
+    for (var a in abcd) {
+      print(a.title);
+    }
+    print(abcd.length);
+    return abcd;
+  }
 }
 
 /// Runs inside the background isolate
