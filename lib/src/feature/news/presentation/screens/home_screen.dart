@@ -51,101 +51,123 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final asyncArticles = ref.watch(paginatedArticlesProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Latest News',
-          style: TextStyle(
-            fontSize: 26.0,
-            fontWeight: FontWeight.bold,
-            color: Colors.blue,
+        appBar: AppBar(
+          title: const Text(
+            'Latest News',
+            style: TextStyle(
+              fontSize: 26.0,
+              fontWeight: FontWeight.bold,
+              color: Colors.blue,
+            ),
           ),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: () async {
-              await ref.refresh(syncArticlesProvider.future);
-              ref.read(paginatedArticlesProvider.notifier).refresh();
-            },
-          ),
-          PopupMenuButton<SortOption>(
-            onSelected: (SortOption option) {
-              ref.read(selectedSortProvider.notifier).state = option;
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.refresh),
+              onPressed: () async {
+                await ref.refresh(syncArticlesProvider.future);
+                ref.read(paginatedArticlesProvider.notifier).refresh();
+              },
+            ),
+            PopupMenuButton<SortOption>(
+              onSelected: (SortOption option) {
+                ref.read(selectedSortProvider.notifier).state = option;
 
-              ref
-                  .read(paginatedArticlesProvider.notifier)
-                  .refresh(newSort: option);
-            },
-            itemBuilder: (_) => const [
-              PopupMenuItem(
-                  value: SortOption.titleAsc, child: Text('Title asc')),
-              PopupMenuItem(
-                  value: SortOption.titleDesc, child: Text('Title desc')),
-              PopupMenuItem(
-                  value: SortOption.descriptionAsc,
-                  child: Text('Description asc')),
-              PopupMenuItem(
-                  value: SortOption.descriptionDesc,
-                  child: Text('Description desc')),
-            ],
-          )
-        ],
-      ),
-      body: syncState.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, _) => Center(child: Text("Sync error: $err")),
-        data: (_) {
-          return asyncArticles.when(
-            data: (articles) {
-              if (articles.isEmpty) {
-                return const Center(child: Text("No articles found"));
-              }
-              print("Length is: ${articles.length}");
-              return ListView.builder(
-                controller: _scrollController,
-                itemCount: articles.length,
-                itemBuilder: (context, index) {
-                  final News article = articles[index];
-                  return Card(
-                    margin:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    elevation: 3,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            article.title.isNotEmpty
-                                ? article.title
-                                : 'No Title',
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
+                ref
+                    .read(paginatedArticlesProvider.notifier)
+                    .refresh(newSort: option);
+              },
+              itemBuilder: (_) => const [
+                PopupMenuItem(
+                    value: SortOption.titleAsc, child: Text('Title asc')),
+                PopupMenuItem(
+                    value: SortOption.titleDesc, child: Text('Title desc')),
+                PopupMenuItem(
+                    value: SortOption.descriptionAsc,
+                    child: Text('Description asc')),
+                PopupMenuItem(
+                    value: SortOption.descriptionDesc,
+                    child: Text('Description desc')),
+              ],
+            ),
+          ],
+        ),
+        body: Column(children: [
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: SearchAnchor(
+              builder: (context, controller) {
+                return SearchBar(
+                  controller: controller,
+                  hintText: "Search here",
+                  leading: const Icon(Icons.search),
+                  onChanged: (_) {
+                    // will implement later
+                  },
+                );
+              },
+              suggestionsBuilder: (context, controller) {
+                return [];
+              },
+            ),
+          ),
+          Expanded(
+            child: syncState.when(
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (err, _) => Center(child: Text("Sync error: $err")),
+              data: (_) {
+                return asyncArticles.when(
+                  data: (articles) {
+                    if (articles.isEmpty) {
+                      return const Center(child: Text("No articles found"));
+                    }
+                    print("Length is: ${articles.length}");
+                    return ListView.builder(
+                      controller: _scrollController,
+                      itemCount: articles.length,
+                      itemBuilder: (context, index) {
+                        final News article = articles[index];
+                        return Card(
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 8),
+                          elevation: 3,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  article.title.isNotEmpty
+                                      ? article.title
+                                      : 'No Title',
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  article.description.isNotEmpty
+                                      ? article.description
+                                      : 'No Description',
+                                  style: const TextStyle(fontSize: 14),
+                                ),
+                              ],
                             ),
                           ),
-                          const SizedBox(height: 8),
-                          Text(
-                            article.description.isNotEmpty
-                                ? article.description
-                                : 'No Description',
-                            style: const TextStyle(fontSize: 14),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              );
-            },
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (err, _) => Center(child: Text("DB error: $err")),
-          );
-        },
-      ),
-    );
+                        );
+                      },
+                    );
+                  },
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
+                  error: (err, _) => Center(child: Text("DB error: $err")),
+                );
+              },
+            ),
+          )
+        ]));
   }
 }
