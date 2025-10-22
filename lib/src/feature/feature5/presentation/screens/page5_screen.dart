@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:practiceapp/src/feature/feature5/domain/model/feature5.dart';
 import 'package:practiceapp/src/feature/feature5/presentation/providers/feature5_providers.dart';
+import 'package:practiceapp/src/feature/feature5/presentation/screens/loading_with_text_widget.dart';
 
 class Page5Screen extends ConsumerStatefulWidget {
   const Page5Screen({super.key});
@@ -65,7 +66,7 @@ class _Page5ScreenState extends ConsumerState<Page5Screen> {
         ],
       ),
       body: syncState.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const Center(child: LoadingWithText()),
         error: (err, _) => Center(child: Text("Sync error: $err")),
         data: (_) {
           return asyncFeat5.when(

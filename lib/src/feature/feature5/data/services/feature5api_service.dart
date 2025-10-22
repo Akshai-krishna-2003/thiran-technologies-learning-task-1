@@ -76,10 +76,23 @@ class Feature5Api {
         if (pngUrl.isNotEmpty) {
           try {
             final download = await http.get(Uri.parse(pngUrl));
-            final filePath = p.join(dir.path, p.basename(pngUrl));
+            // Create a subfolder called "flags" inside the app documents directory
+            final flagsDir = Directory(p.join(dir.path, 'flags'));
+            if (!await flagsDir.exists()) {
+              await flagsDir.create(recursive: true);
+            }
+
+            // Use only the image filename (e.g., "us.png")
+            final fileName = p.basename(pngUrl);
+
+            // Build full path inside the flags folder
+            final filePath = p.join(flagsDir.path, fileName);
+
+            // Write file
             final file = File(filePath);
-            print("The file path is: ${file.path}");
             await file.writeAsBytes(download.bodyBytes);
+
+            print("Saved flag to: ${file.path}");
             localPath = file.path;
           } catch (e) {
             print("Image download failed for $pngUrl: $e");
